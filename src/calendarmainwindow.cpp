@@ -62,7 +62,7 @@ Calendarmainwindow::Calendarmainwindow(QWidget *w)
     : DMainWindow (w)
 {
     m_DataGetThread = new DbusDataGetThread(CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getDbus(),
-                                            this);
+                                            nullptr);
     m_currentdate = QDate::currentDate();
     setContentsMargins(QMargins(0, 0, 0, 0));
     initUI();
@@ -104,6 +104,7 @@ Calendarmainwindow::Calendarmainwindow(QWidget *w)
 
 Calendarmainwindow::~Calendarmainwindow()
 {
+    delete m_DataGetThread;
     CDynamicIcon::releaseInstance();
 }
 
