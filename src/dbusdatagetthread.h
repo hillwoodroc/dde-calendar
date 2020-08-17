@@ -89,12 +89,14 @@ public:
     //获取节假日信息
     void getFestivalInfo(YearFestival *festivalInfo);
 
+    void setIsRun(bool IsRun);
+
 signals:
     void signalGetScheduleSuccess();
 
 private:
     CSchedulesDBus       *m_DataManage;
-
+    bool m_IsRun {true};
 };
 
 #endif // DBUSDATAGETTHREAD_H

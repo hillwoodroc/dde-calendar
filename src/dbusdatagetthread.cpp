@@ -43,6 +43,7 @@ DbusDataGetThread::DbusDataGetThread(CSchedulesDBus *_DataManage, QObject *paren
 
 DbusDataGetThread::~DbusDataGetThread()
 {
+    m_work->setIsRun(false);
     workerThread.quit();
     workerThread.wait();
 }
@@ -78,6 +79,8 @@ void DataGetWork::getScheduleInfo(YearScheduleInfo *ScheduleInfo)
                               out);
         ScheduleInfo->m_monthInfo[i+1] = out;
     }
+    if (!m_IsRun)
+        return;
     emit signalGetScheduleSuccess();
 }
 
@@ -92,3 +95,10 @@ void DataGetWork::getFestivalInfo(YearFestival *festivalInfo)
     Q_UNUSED(festivalInfo);
 }
 
+void DataGetWork::setIsRun(bool IsRun)
+{
+    QMutex mutex;
+    mutex.lock();
+    m_IsRun = IsRun;
+    mutex.unlock();
+}
