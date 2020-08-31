@@ -1,8 +1,8 @@
 [Desktop Entry]
 Categories=Application;Utility;Calendar;
 Comment=Calendar is a date tool.
-Exec=/usr/bin/deepin-turbo-invoker  --type=dtkwidget dde-calendar %U 
-#Exec=dde-calendar
+#Exec=/usr/bin/deepin-turbo-invoker  --type=dtkwidget dde-calendar %U 
+Exec=dde-calendar
 GenericName=Calendar
 Icon=dde-calendar
 Name=Deepin Calendar
