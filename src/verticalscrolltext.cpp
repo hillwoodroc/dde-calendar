@@ -20,6 +20,8 @@
 //#include "ui_VerticalScrollText.h"
 #include <QMouseEvent>
 #include <QDebug>
+#include <QPainterPath>
+#include <QWheelEvent>
 
 VerticalScrollText::VerticalScrollText(QWidget *parent): QWidget(parent)
 {

@@ -1,6 +1,7 @@
 #include "SchecduleRemindWidget.h"
 #include <QPainter>
 #include <QtMath>
+#include <QPainterPath>
 #include <DGuiApplicationHelper>
 DGUI_USE_NAMESPACE
 SchecduleRemindWidget::SchecduleRemindWidget(QWidget *parent)

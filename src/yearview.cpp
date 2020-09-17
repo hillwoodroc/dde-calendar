@@ -37,7 +37,7 @@
 #include "yearschceduleview.h"
 #include <QDesktopWidget>
 #include <DApplication>
-
+#include <QPainterPath>
 #include <QMouseEvent>
 
 #include <DArrowRectangle>

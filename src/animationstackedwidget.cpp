@@ -1,5 +1,5 @@
 #include "animationstackedwidget.h"
-
+#include <QPainterPath>
 #include <QPainter>
 
 AnimationStackedWidget::AnimationStackedWidget(const AnimationOri ori, QWidget *parent)

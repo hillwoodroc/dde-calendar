@@ -23,6 +23,7 @@
 #include <DMessageBox>
 #include <DPushButton>
 #include <DHiDPIHelper>
+#include <QPainterPath>
 #include <DPalette>
 #include "schcedulectrldlg.h"
 #include <QShortcut>

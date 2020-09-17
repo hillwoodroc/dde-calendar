@@ -24,6 +24,7 @@
 #include <QPainter>
 #include <QHBoxLayout>
 #include <QStylePainter>
+#include <QPainterPath>
 #include <QRect>
 #include "schceduledlg.h"
 #include "myschceduleview.h"

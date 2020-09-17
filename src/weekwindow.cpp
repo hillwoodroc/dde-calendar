@@ -27,6 +27,7 @@
 #include <QHBoxLayout>
 #include <DPalette>
 #include <DHiDPIHelper>
+#include <QMouseEvent> 
 #include "schcedulesearchview.h"
 #include "todybutton.h"
 

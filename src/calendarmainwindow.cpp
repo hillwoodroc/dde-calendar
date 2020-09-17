@@ -45,6 +45,7 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include <DFontSizeManager>
+#include <QMouseEvent> 
 DGUI_USE_NAMESPACE
 static const int CalendarMTitleHeight = 50;
 

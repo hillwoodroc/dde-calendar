@@ -22,6 +22,7 @@
 #include <QListWidget>
 #include <QLabel>
 #include <QPainter>
+#include <QPainterPath>
 #include <QHBoxLayout>
 #include <QStylePainter>
 #include <QRect>

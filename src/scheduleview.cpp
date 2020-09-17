@@ -22,6 +22,7 @@
 #include <QShortcut>
 #include <DHorizontalLine>
 #include <QVBoxLayout>
+#include <QPainterPath>
 #include <QApplication>
 #include "alldayeventview.h"
 #include "graphicsview.h"

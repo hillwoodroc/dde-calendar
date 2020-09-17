@@ -1,6 +1,7 @@
 #include "todybutton.h"
 #include <QPainter>
 #include <DPalette>
+#include <QMouseEvent> 
 DGUI_USE_NAMESPACE
 CTodyButton::CTodyButton(QWidget *parent): DPushButton(parent)
 {

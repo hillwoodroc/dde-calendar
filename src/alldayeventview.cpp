@@ -22,6 +22,8 @@
 #include <QListWidget>
 #include <QLabel>
 #include <QPainter>
+#include <QPainterPath>
+#include <QWheelEvent>
 #include <QHBoxLayout>
 #include <QStylePainter>
 #include <QRect>

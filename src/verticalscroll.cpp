@@ -20,6 +20,8 @@
 //#include "ui_verticalscroll.h"
 #include <QMouseEvent>
 #include <QDebug>
+#include <QPainterPath>
+#include <QWheelEvent>
 
 VerticalScroll::VerticalScroll(QWidget *parent): QWidget(parent)
 {

@@ -1,6 +1,7 @@
 #include "customframe.h"
 #include <QPainter>
 #include <DPalette>
+#include <QPainterPath>
 #include <QFontMetrics>
 DGUI_USE_NAMESPACE
 CustomFrame::CustomFrame(QWidget *parent): QFrame (parent)

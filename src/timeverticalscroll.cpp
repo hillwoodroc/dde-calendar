@@ -21,6 +21,8 @@
 #include <QMouseEvent>
 #include <QDebug>
 #include <DPalette>
+#include <QPainterPath>
+#include <QWheelEvent>
 #include "scheduledatamanage.h"
 DGUI_USE_NAMESPACE
 CTimeVerticalScroll::CTimeVerticalScroll(QWidget *parent): DWidget(parent)

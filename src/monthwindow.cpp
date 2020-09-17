@@ -26,6 +26,7 @@
 #include <DPalette>
 #include "schcedulesearchview.h"
 #include "todybutton.h"
+#include <QWheelEvent>
 DGUI_USE_NAMESPACE
 CMonthWindow::CMonthWindow(QWidget *parent): QMainWindow (parent)
 {

@@ -31,6 +31,7 @@
 #include <QMenu>
 #include <DPalette>
 #include <DHiDPIHelper>
+#include <QMouseEvent> 
 #include "customframe.h"
 DGUI_USE_NAMESPACE
 CWeekHeadView::CWeekHeadView(QWidget *parent) : DFrame(parent)

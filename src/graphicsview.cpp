@@ -29,11 +29,13 @@
 #include <DMessageBox>
 #include <DPushButton>
 #include <DHiDPIHelper>
+#include <QPainterPath>
 #include <DPalette>
 #include "schcedulectrldlg.h"
 #include "myschceduleview.h"
 #include <QShortcut>
 #include <QTimer>
+#include <QWheelEvent>
 DGUI_USE_NAMESPACE
 CGraphicsView::CGraphicsView(QWidget *parent, int viewType)
     : DGraphicsView(parent), m_viewType(viewType)
