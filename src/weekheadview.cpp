@@ -25,6 +25,7 @@
 #include <QEvent>
 #include <QDebug>
 #include <QMessageBox>
+#include <QPainterPath>
 #include <QTime>
 #include <QQueue>
 #include <QMenu>

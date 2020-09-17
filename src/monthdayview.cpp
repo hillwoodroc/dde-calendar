@@ -19,6 +19,7 @@
 
 #include "monthdayview.h"
 #include <QHBoxLayout>
+#include <QPainterPath>
 #include "constants.h"
 #include <QPainter>
 #include <QBrush>

@@ -25,6 +25,8 @@
 #include <QEvent>
 #include <QDebug>
 #include <QMessageBox>
+#include <QWheelEvent>
+#include <QPainterPath>
 #include <QTime>
 #include <QQueue>
 #include "daymonthview.h"

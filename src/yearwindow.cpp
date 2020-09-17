@@ -23,6 +23,8 @@
 #include <QMessageBox>
 #include <DPalette>
 #include <DHiDPIHelper>
+#include <QWheelEvent>
+#include <QMouseEvent>
 #include <QMenuBar>
 #include "schcedulesearchview.h"
 DGUI_USE_NAMESPACE
