@@ -106,12 +106,12 @@ QRect PrimaryRect()
 #include "schedulesdbus.h"
 int main(int argc, char *argv[])
 {
-    //DApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+    //优先处理DApplication，以便处理各类事件
+    DApplication a(argc, argv);
     QGuiApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
     //为了解决应用打开不在桌面正中心，还有没有帮助等问题，
     qputenv("QT_WAYLAND_SHELL_INTEGRATION","kwayland-shell");
     // DApplication::loadDXcbPlugin();
-    DApplication a(argc, argv);
     g_appPath = QDir::homePath() + QDir::separator() + "." + qApp->applicationName();
     QDir t_appDir;
     t_appDir.mkpath(g_appPath);
