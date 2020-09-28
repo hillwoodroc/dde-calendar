@@ -76,8 +76,6 @@ CYearView::CYearView(QWidget *parent) : CustomFrame(parent)
     separatorLineLayout->addStretch();
     // QSpacerItem *t_spaceitem = new QSpacerItem(30, 32, QSizePolicy::Expanding, QSizePolicy::Fixed);
     //separatorLineLayout->addSpacerItem(t_spaceitem);
-
-    m_currentMouth->show();
     m_currentMouth->installEventFilter(this);
 
     // cells grid
