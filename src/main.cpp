@@ -128,6 +128,8 @@ int main(int argc, char *argv[])
     a.setProductIcon(t_icon);
     a.setApplicationDescription(QApplication::translate("CalendarWindow", "Calendar is a tool to view dates, and also a smart daily planner to schedule all things in life. "));
     a.setApplicationAcknowledgementPage("https://www.deepin.org/acknowledgments/dde-calendar");
+    //设置程序显示名称
+    a.setApplicationDisplayName(QApplication::translate("CalendarWindow", "Calendar"));
     //a.setTheme("light");
     //a.setStyle("chameleon");
     static const QDate buildDate = QLocale( QLocale::English ).toDate( QString(__DATE__).replace("  ", " 0"), "MMM dd yyyy");
