@@ -18,9 +18,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "calendardatedatemanage.h"
+#include "calendardatedatamanage.h"
 
-CalendarDateDateManage::CalendarDateDateManage(QObject *parent)
+#include <QtMath>
+
+CalendarDateDataManage::CalendarDateDataManage(QObject *parent)
     : QObject(parent)
     ,m_currentDateTime(QDateTime::currentDateTime())
     ,m_selectDate(m_currentDateTime.date())
@@ -30,27 +32,27 @@ CalendarDateDateManage::CalendarDateDateManage(QObject *parent)
     
 }
 
-void CalendarDateDateManage::setSelectDate(const QDate &selectDate)
+void CalendarDateDataManage::setSelectDate(const QDate &selectDate)
 {
     m_selectDate = selectDate;
 }
 
-QDate CalendarDateDateManage::getSelectDate() const
+QDate CalendarDateDataManage::getSelectDate() const
 {
     return m_selectDate;
 }
 
-void CalendarDateDateManage::setCurrentDateTime(const QDateTime &currentDateTime)
+void CalendarDateDataManage::setCurrentDateTime(const QDateTime &currentDateTime)
 {
     m_currentDateTime = currentDateTime;
 }
 
-QDateTime CalendarDateDateManage::getCurrentDate() const
+QDateTime CalendarDateDataManage::getCurrentDate() const
 {
     return  m_currentDateTime;
 }
 
-QMap<int,QVector<QDate> > CalendarDateDateManage::getYearDate(const int &year)
+QMap<int,QVector<QDate> > CalendarDateDataManage::getYearDate(const int &year)
 {
     QMap<int ,QVector<QDate> > resultMap;
     for (int i = 1; i < 13; ++i) {
@@ -59,7 +61,7 @@ QMap<int,QVector<QDate> > CalendarDateDateManage::getYearDate(const int &year)
     return resultMap;
 }
 
-QVector<QDate> CalendarDateDateManage::getMonthDate(const int &year, const int &month)
+QVector<QDate> CalendarDateDataManage::getMonthDate(const int &year, const int &month)
 {
     QVector<QDate> resultDate;
     //自然月的第一天
@@ -73,7 +75,7 @@ QVector<QDate> CalendarDateDateManage::getMonthDate(const int &year, const int &
     return resultDate;
 }
 
-QVector<QDate> CalendarDateDateManage::getWeekDate(const QDate &date)
+QVector<QDate> CalendarDateDataManage::getWeekDate(const QDate &date)
 {
     QVector<QDate> resultDate;
     //获取这个周的第一天日期
@@ -85,22 +87,22 @@ QVector<QDate> CalendarDateDateManage::getWeekDate(const QDate &date)
     return resultDate;
 }
 
-QDate CalendarDateDateManage::getDayDateBySelectDate() const
+QDate CalendarDateDataManage::getDayDateBySelectDate() const
 {
     return m_selectDate;
 }
 
-void CalendarDateDateManage::setWeekFirstDay(const Qt::DayOfWeek &firstDay)
+void CalendarDateDataManage::setWeekFirstDay(const Qt::DayOfWeek &firstDay)
 {
     m_weekFirstDay = firstDay;
 }
 
-Qt::DayOfWeek CalendarDateDateManage::getWeekFirstDay() const
+Qt::DayOfWeek CalendarDateDataManage::getWeekFirstDay() const
 {
     return  m_weekFirstDay;
 }
 
-void CalendarDateDateManage::setWeekDayFormatByID(const int &weekDayFormatID)
+void CalendarDateDataManage::setWeekDayFormatByID(const int &weekDayFormatID)
 {
     switch (weekDayFormatID) {
     case 0:
@@ -112,12 +114,12 @@ void CalendarDateDateManage::setWeekDayFormatByID(const int &weekDayFormatID)
     }
 }
 
-QString CalendarDateDateManage::getWeekDayFormat() const
+QString CalendarDateDataManage::getWeekDayFormat() const
 {
     return m_weekDayFormat;
 }
 
-QDate CalendarDateDateManage::getFirstDayOfWeek(const QDate &date)
+QDate CalendarDateDataManage::getFirstDayOfWeek(const QDate &date)
 {
     //根据选择时间周工作日和每周第一天的周工作日得到偏移量
     int offset = date.dayOfWeek() - m_weekFirstDay;
@@ -125,4 +127,17 @@ QDate CalendarDateDateManage::getFirstDayOfWeek(const QDate &date)
     const int offsetDay = offset <0 ?offset +7:offset;
     //返回这周第一天的日期
     return date.addDays(0 - offsetDay);
+}
+
+int CalendarDateDataManage::getWeekNumOfYear(const QDate &date)
+{
+    int _weekNum {0};
+    //该年第一天
+    const QDate _firstDayOfYear{date.year(),1,1};
+    //该年显示的第一天日期
+    const QDate _firstShowDayOfYear = getFirstDayOfWeek(_firstDayOfYear);
+    //处于该年显示第多少天
+    const qint64  _dayOfShowYear = _firstShowDayOfYear.daysTo(_firstDayOfYear) + date.dayOfYear();
+    _weekNum = qFloor(_dayOfShowYear/7) + 1;
+    return  _weekNum;
 }

@@ -18,18 +18,18 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef CALENDARDATEDATEMANAGE_H
-#define CALENDARDATEDATEMANAGE_H
+#ifndef CALENDARDATEDATAMANAGE_H
+#define CALENDARDATEDATAMANAGE_H
 
 #include <QObject>
 #include <QDateTime>
 #include <QVector>
 #include <QMap>
 /**
- * @brief The CalendarDateDateManage class
+ * @brief The CalendarDateDataManage class
  * 日历时间管理类
  */
-class CalendarDateDateManage : public QObject
+class CalendarDateDataManage : public QObject
 {
     Q_OBJECT
 public:
@@ -37,10 +37,10 @@ public:
 
 public:
     /**
-     * @brief CalendarDateDateManage    构造函数
+     * @brief CalendarDateDataManage    构造函数
      * @param parent
      */
-    explicit CalendarDateDateManage(QObject *parent = nullptr);
+    explicit CalendarDateDataManage(QObject *parent = nullptr);
     /**
      * @brief setSelectDate     设置选择时间
      * @param selectDate        选择时间
@@ -115,6 +115,12 @@ public:
      * @return                          当前周第一天的日期
      */
     QDate getFirstDayOfWeek(const QDate &date);
+    /**
+     * @brief getWeekNumOfYear		根据日期获取该日期处于该年第多少周
+     * @param date			选择的日期
+     * @return				处于当年第多少周
+     */
+    int getWeekNumOfYear(const QDate &date);
 signals:
     
 public slots:
@@ -146,4 +152,4 @@ private:
     QString     m_weekDayFormat{"ddd"};
 };
 
-#endif // CALENDARDATEDATEMANAGE_H
+#endif // CALENDARDATEDATAMANAGE_H
