@@ -647,6 +647,9 @@ void CYearWindow::slotsearchDateSelect(QDate date)
  */
 void CYearWindow::wheelEvent(QWheelEvent *event)
 {
+    //如果为左右方向则退出
+    if(event->orientation() == Qt::Orientation::Horizontal)
+        return;
     if (event->delta() < 0) {
         //下一年
         slotnext();
