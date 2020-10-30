@@ -118,6 +118,11 @@ signals:
      * @brief signaleSchedulHide 隐藏日程浮框的信号
      */
     void signaleSchedulHide();
+    /**
+     * @brief signalAngleDelta      发送滚动信号滚动相对量
+     * @param delta     滚动相对量
+     */
+    void signalAngleDelta(int delta);
 public slots:
     void setCurrentDate(const QDate date);
     void setLunarVisible(bool visible);
@@ -140,6 +145,7 @@ private:
     int checkDay(int weekday);
 protected:
     void mousePressEvent(QMouseEvent *event) override;
+    void wheelEvent(QWheelEvent *e) override;
 private slots:
     void cellClicked(QWidget *cell);
     void setSelectedCell(int index);

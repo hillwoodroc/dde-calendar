@@ -751,3 +751,11 @@ void CWeekHeadView::mousePressEvent(QMouseEvent *event)
     //发送隐藏日程浮框的信号
     emit signaleSchedulHide();
 }
+
+void CWeekHeadView::wheelEvent(QWheelEvent *e)
+{
+    //如果滚轮为左右方向则触发信号
+    if(e->orientation() == Qt::Orientation::Horizontal){
+        emit signalAngleDelta(e->angleDelta().x());
+    }
+}

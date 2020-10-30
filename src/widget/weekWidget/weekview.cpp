@@ -49,11 +49,19 @@ CWeekView::CWeekView(QWidget *parent)
     QHBoxLayout *hboxLayout = new QHBoxLayout;
     hboxLayout->setMargin(0);
     hboxLayout->setSpacing(0);
+    //上一周按钮
+    m_prevButton = new DIconButton(DStyle::SP_ArrowLeft, this);
+    m_prevButton->setFixedSize(36, 36);
+    connect(m_prevButton,&DIconButton::clicked,this,&CWeekView::signalBtnPrev);
+    //下一周按钮
+    m_nextButton = new DIconButton(DStyle::SP_ArrowRight, this);
+    m_nextButton->setFixedSize(36, 36);
+    connect(m_nextButton,&DIconButton::clicked,this,&CWeekView::signalBtnNext);
+
+    hboxLayout->addWidget(m_prevButton);
     //显示周数的widget
     for (int c = 0; c != DDEWeekCalendar::NumWeeksDisplayed; ++c) {
         QWidget *cell = new QWidget;
-        //设置大小
-        cell->setFixedSize(DDEWeekCalendar::WWeekCellWidth, DDEWeekCalendar::WWeekCellHeight);
         //设置事件过滤器
         cell->installEventFilter(this);
         cell->setFocusPolicy(Qt::ClickFocus);
@@ -61,6 +69,7 @@ CWeekView::CWeekView(QWidget *parent)
         hboxLayout->addWidget(cell);
         m_cellList.append(cell);
     }
+    hboxLayout->addWidget(m_nextButton);
     //设置布局
     setLayout(hboxLayout);
     //设置最小宽度
@@ -317,64 +326,24 @@ void CWeekView::updateDate()
     update();
 }
 /**
- * @brief resizeEvent 调整窗口大小
- * @param event 窗口大小调整事件
- */
-void CWeekView::resizeEvent(QResizeEvent *event)
-{
-    int w = width() / DDEWeekCalendar::NumWeeksDisplayed;
-    int h = height();
-    int ww = 36;
-
-    if (w >= ww) {
-        for (int c = 0; c != DDEWeekCalendar::NumWeeksDisplayed; ++c) {
-            m_cellList[c]->setFixedSize(w, h);
-            m_cellList[c]->update();
-        }
-        for (int i = 0; i < DDEWeekCalendar::NumWeeksDisplayed; i++) {
-            m_cellList[i]->setVisible(true);
-            m_cellList[i]->update();
-        }
-    } else {
-        for (int c = 0; c != DDEWeekCalendar::NumWeeksDisplayed; ++c) {
-            m_cellList[c]->setFixedSize(ww, h);
-            m_cellList[c]->update();
-        }
-        int t_num = qRound((ww * DDEWeekCalendar::NumWeeksDisplayed - width()) / ww / 2.0);
-        QVector<bool> vindex;
-        vindex.resize(10);
-        vindex.fill(true);
-
-        for (int i = 0; i < t_num; i++) {
-            vindex[i] = false;
-            vindex[9 - i] = false;
-        }
-        for (int i = 0; i < DDEWeekCalendar::NumWeeksDisplayed; i++) {
-            m_cellList[i]->setVisible(vindex[i]);
-            m_cellList[i]->update();
-        }
-    }
-    QWidget::resizeEvent(event);
-}
-/**
  * @brief wheelEvent 鼠标滚轮切换上一周下一周
  * @param event 鼠标滚轮事件
  */
 void CWeekView::wheelEvent(QWheelEvent *event)
 {
-    Q_UNUSED(event);
     bool isDragging = false;
-    //
     emit signalIsDragging(isDragging);
     //判断是否是拖拽状态
     if (!isDragging) {
-        if (event->delta() < 0) {
-            //上一周
-            slotnext();
-        } else {
-            //下一周
-            slotprev();
+        //如果滚动为水平方向则修改周数
+        if(event->orientation() == Qt::Orientation::Horizontal){
+            if (event->delta() < 0) {
+                //上一周
+                slotnext();
+            } else {
+                //下一周
+                slotprev();
+            }
         }
     }
-
 }

@@ -515,6 +515,10 @@ Others:         无
 void CGraphicsView::wheelEvent( QWheelEvent *event )
 {
     emit signalScheduleShow(false);
+    //非全天部分如果滚动为左右则退出
+    if(event->orientation()==Qt::Orientation::Horizontal){
+        return;
+    }        
     int test = event -> delta();
     int viewWidth = viewport()->width();
     int viewHeight = viewport()->height();

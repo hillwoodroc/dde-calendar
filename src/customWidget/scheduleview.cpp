@@ -399,6 +399,11 @@ void CScheduleView::resizeEvent(QResizeEvent *event)
     m_graphicsView->keepCenterOnScene();
 }
 
+void CScheduleView::wheelEvent(QWheelEvent *e)
+{
+    emit signalAngleDelta(e->angleDelta().x());
+}
+
 void CScheduleView::initUI()
 {
     m_layout = new QVBoxLayout;

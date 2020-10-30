@@ -19,9 +19,13 @@
 #ifndef WEEKVIEW_H
 #define WEEKVIEW_H
 
+#include <DIconButton>
+
 #include <QObject>
 #include <QWidget>
 #include <QDate>
+
+DWIDGET_USE_NAMESPACE
 /**
  * @brief The CWeekView class
  */
@@ -51,8 +55,15 @@ signals:
      * @param isDragging 是否是拖拽状态
      */
     void signalIsDragging(bool &isDragging);
+    /**
+     * @brief signalBtnPrev 前一周按钮信号
+     */
+    void signalBtnPrev();
+    /**
+     * @brief signalBtnNext 后一周按钮信号
+     */
+    void signalBtnNext();
 protected:
-    void resizeEvent(QResizeEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
 private:
     void paintCell(QWidget *cell);
@@ -66,6 +77,10 @@ private:
      * 周数list
      */
     QList<QWidget *> m_cellList;
+    //上一周按钮
+    DIconButton *m_prevButton = nullptr;
+    //下一周按钮
+    DIconButton *m_nextButton = nullptr;
     //选择的日期
     QDate m_selectDate;
     //周数对应的日期

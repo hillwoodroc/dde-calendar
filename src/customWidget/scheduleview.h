@@ -54,6 +54,11 @@ signals:
     void signalsUpdateShcedule(int id = 0);
     void signalsCurrentScheduleDate(QDate date);
     void signalViewtransparentFrame(int type);
+    /**
+     * @brief signalAngleDelta      发送滚动信号滚动相对量
+     * @param delta     滚动相对量
+     */
+    void signalAngleDelta(int delta);
 public slots:
     void slotPosHours(QVector<int> vPos, QVector<int> vHours, int cuttrnttimetype = 0);
     void setDate(QDate date);
@@ -66,6 +71,7 @@ public slots:
 protected:
     void paintEvent(QPaintEvent *event) override;
     void resizeEvent(QResizeEvent *event) override;
+    void wheelEvent(QWheelEvent *e) override;
 private:
     void initUI();
     void initConnection();
