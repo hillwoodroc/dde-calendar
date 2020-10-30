@@ -86,6 +86,11 @@ CMonthView::CMonthView(QWidget *parent) : DWidget(parent)
             &CMonthGraphiview::signalScheduleShow,
             this,
             &CMonthView::slotScheduleRemindWidget);
+
+    connect(m_MonthGraphicsView,
+            &CMonthGraphiview::signalAngleDelta
+            ,this,
+            &CMonthView::signalAngleDelta);
     //新建最终布局
     m_mainLayout = new QVBoxLayout;
     m_mainLayout->setMargin(0);

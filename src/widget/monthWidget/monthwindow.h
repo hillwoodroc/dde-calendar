@@ -59,8 +59,6 @@ public slots:
     void previousMonth();
     void nextMonth();
     void slotsearchDateSelect(QDate date);
-protected:
-    void wheelEvent(QWheelEvent *) override;
 private:
     void initUI();
     void initConnection();
@@ -107,6 +105,11 @@ signals:
 public slots:
     void slotReturnTodayUpdate();
     void slotScheduleHide();
+    /**
+     * @brief slotAngleDelta    接受滚动事件滚动相对量
+     * @param delta     滚动相对量
+     */
+    void slotAngleDelta(int delta);
 public slots:
     void slotupdateSchedule(int id = 0);
     void slotTransitSchedule(int id = 0);

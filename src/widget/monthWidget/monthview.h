@@ -109,6 +109,11 @@ signals:
      * @param end 结束日期
      */
     void signalsupdatescheduleD(QWidget *w, QDate begin, QDate end);
+    /**
+     * @brief signalAngleDelta      发送滚动信号滚动相对量
+     * @param delta     滚动相对量
+     */
+    void signalAngleDelta(int delta);
 protected:
     void resizeEvent(QResizeEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
