@@ -360,6 +360,8 @@ void CMonthWindow::initConnection()
     connect(m_monthView, &CMonthView::signalViewtransparentFrame, this, &CMonthWindow::signalViewtransparentFrame);
     connect(m_monthView, &CMonthView::signalsViewSelectDate, this, &CMonthWindow::signalsViewSelectDate);
     connect(m_monthView,&CMonthView::signalAngleDelta,this,&CMonthWindow::slotAngleDelta);
+    //月份控件区域左右滚动信号关联
+    connect(m_monthDayView,&CMonthDayView::signalAngleDelta,this,&CMonthWindow::slotAngleDelta);
 }
 /**
  * @brief initLunar 初始化阴历信息

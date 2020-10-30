@@ -141,6 +141,14 @@ void CMonthDayView::setsearchfalg(bool flag)
 {
     m_searchfalg = flag;
 }
+
+void CMonthDayView::wheelEvent(QWheelEvent *e)
+{
+    //如果滚动为左右则触发信号
+    if(e->orientation() ==Qt::Orientation::Horizontal){
+        emit signalAngleDelta(e->angleDelta().x());
+    }
+}
 /**
  * @brief CMonthWidget 构造函数
  * @param parent 父类

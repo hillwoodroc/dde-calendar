@@ -41,6 +41,8 @@ public:
     void setRCurrentDate(const QDate date);
     void setTheMe(int type = 0);
     void setsearchfalg(bool flag);
+protected:
+    void wheelEvent(QWheelEvent *e) override;
 signals:
     /**
      * @brief signalsSelectDate 选择日期的信号
@@ -52,6 +54,11 @@ signals:
      * @param date 日期
      */
     void signalsCurrentDate(QDate date);
+    /**
+     * @brief signalAngleDelta      发送滚动信号滚动相对量
+     * @param delta     滚动相对量
+     */
+    void signalAngleDelta(int delta);
 private:
     /**
      * @brief m_monthWidget widget
