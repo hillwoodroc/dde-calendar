@@ -31,7 +31,7 @@
 #include <QPainter>
 #include <QtMath>
 DGUI_USE_NAMESPACE
-CMySchceduleView::CMySchceduleView(const ScheduleDtailInfo &schduleInfo,QWidget *parent)
+CMySchceduleView::CMySchceduleView(const ScheduleDtailInfo &schduleInfo, QWidget *parent)
     : DDialog(parent)
 //      m_scheduleInfo(ScheduleDtailInfo)
 {
@@ -112,7 +112,7 @@ void CMySchceduleView::AutoFeed(QString text)
     if (((row + 1) * 24) > 100) {
         area->setFixedHeight(100 - 20);
     } else {
-        area->setFixedHeight((row + 1 ) * 24);
+        area->setFixedHeight((row + 1) * 24);
     }
 
     if ((row * 24 + 180) > 240) {
@@ -125,9 +125,33 @@ void CMySchceduleView::AutoFeed(QString text)
     m_schceduleLabel->adjustSize();
 }
 
+/**
+ * @brief CMySchceduleView::moveCentorShow      在顶层窗口居中显示
+ */
+void CMySchceduleView::moveCentorShow()
+{
+    //需要获取的顶层窗口
+    QWidget *_parentWidget = this;
+    //
+    QWidget *tmpWidget = nullptr;
+    do {
+        //获取父类对象，如果为qwiget则赋值否则退出
+        tmpWidget = qobject_cast<QWidget *>(_parentWidget->parent());
+        if (tmpWidget == nullptr) {
+            break;
+        } else {
+            _parentWidget = tmpWidget;
+        }
+    } while (_parentWidget != nullptr);
+    //获取最顶层窗口的中心坐标
+    const QPoint global = _parentWidget->mapToGlobal(_parentWidget->rect().center());
+    //居中显示
+    move(global.x() - width() / 2, global.y() - height() / 2);
+}
+
 void CMySchceduleView::showEvent(QShowEvent *event)
 {
-    Q_UNUSED(event);
+    DDialog::showEvent(event);
     emit signalViewtransparentFrame(1);
 }
 
@@ -173,7 +197,7 @@ void CMySchceduleView::paintLabel(QWidget *label)
         for (int i = 0; i < strText.count(); i++) {
             str += strText.at(i);
             if (fm.width(str) > 340) {
-                str.remove(str.count() - 1,1);
+                str.remove(str.count() - 1, 1);
                 strList.append(str);
                 str.clear();
                 --i;
@@ -196,7 +220,7 @@ void CMySchceduleView::paintLabel(QWidget *label)
     }
 
     for (int i = 0; i < strList.count(); i++) {
-        painter.drawText(QRect(0, h * i, 340, h + 4),Qt::AlignHCenter,strList.at(i));
+        painter.drawText(QRect(0, h * i, 340, h + 4), Qt::AlignHCenter, strList.at(i));
     }
 
     painter.restore();
@@ -332,6 +356,17 @@ void CMySchceduleView::slotDeleteBt()
     emit signalsEditorDelete(1);
 }
 
+/**
+ * @brief CMySchceduleView::exec        显示对话框
+ * @return
+ */
+int CMySchceduleView::exec()
+{
+    //移动窗口
+    moveCentorShow();
+    return DDialog::exec();
+}
+
 void CMySchceduleView::initUI()
 {
     //m_icon = new QLabel(this);
@@ -342,7 +377,7 @@ void CMySchceduleView::initUI()
     m_Title = new QLabel(this);
     m_Title->setFixedSize(108, 51);
     m_Title->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
-    DFontSizeManager::instance()->bind(m_Title,DFontSizeManager::T5);
+    DFontSizeManager::instance()->bind(m_Title, DFontSizeManager::T5);
     QIcon t_icon = QIcon::fromTheme("dde-calendar");
     setIcon(t_icon);
     QFont labelTitle;
@@ -372,7 +407,7 @@ void CMySchceduleView::initUI()
     mainLayout->setSpacing(0);
     // mainLayout->setContentsMargins(10, 10, 10, 10);
 
-    area = new QScrollArea (this);
+    area = new QScrollArea(this);
     area->setFrameShape(QFrame::NoFrame);
     area->setFixedWidth(390);
     DPalette pa = area->palette();
@@ -388,8 +423,8 @@ void CMySchceduleView::initUI()
     area->setWidgetResizable(true);
     area->setAlignment(Qt::AlignCenter);
 
-    w = new QWidget (this);
-    w->setFixedSize(340,24);
+    w = new QWidget(this);
+    w->setFixedSize(340, 24);
     w->installEventFilter(this);
 
     area->setWidget(w);
@@ -418,7 +453,7 @@ void CMySchceduleView::initUI()
     m_timeLabel = new QLabel(this);
     m_timeLabel->setFixedHeight(26);
     m_timeLabel->setAlignment(Qt::AlignCenter);
-    DFontSizeManager::instance()->bind(m_timeLabel,DFontSizeManager::T6);
+    DFontSizeManager::instance()->bind(m_timeLabel, DFontSizeManager::T6);
     QFont labelT;
     labelT.setFamily("SourceHanSansSC");
     labelT.setWeight(QFont::Bold);
@@ -440,11 +475,11 @@ void CMySchceduleView::initUI()
     mainLayout->addWidget(m_timeLabel);
 
     if (m_scheduleInfo.type.ID == 4) {
-        QHBoxLayout *h = new QHBoxLayout ();
-        m_okBt = new DPushButton (tr("OK"));
+        QHBoxLayout *h = new QHBoxLayout();
+        m_okBt = new DPushButton(tr("OK"));
         m_okBt->setFocusPolicy(Qt::NoFocus);
-        m_okBt->setFixedSize(360,36);
-        connect(m_okBt,&DPushButton::clicked,this,&CMySchceduleView::close);
+        m_okBt->setFixedSize(360, 36);
+        connect(m_okBt, &DPushButton::clicked, this, &CMySchceduleView::close);
         mainLayout->addSpacing(20);
         h->addStretch();
         h->addWidget(m_okBt);

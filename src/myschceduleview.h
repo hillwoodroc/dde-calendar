@@ -34,7 +34,7 @@ class CMySchceduleView : public DDialog
 {
     Q_OBJECT
 public:
-    explicit CMySchceduleView(const ScheduleDtailInfo &schduleInfo,QWidget *parent = nullptr);
+    explicit CMySchceduleView(const ScheduleDtailInfo &schduleInfo, QWidget *parent = nullptr);
     ~CMySchceduleView() Q_DECL_OVERRIDE;
     ScheduleDtailInfo getSchedules()
     {
@@ -46,10 +46,16 @@ signals:
 public slots:
     void slotEditBt();
     void slotDeleteBt();
+    //显示对话框
+    int exec() Q_DECL_OVERRIDE;
+
 private:
     void initUI();
     void initConnection();
     void AutoFeed(QString text);
+    //移动到上一层窗口中间显示
+    void moveCentorShow();
+
 protected:
     void showEvent(QShowEvent *event) Q_DECL_OVERRIDE;
     void paintEvent(QPaintEvent *event) Q_DECL_OVERRIDE;
