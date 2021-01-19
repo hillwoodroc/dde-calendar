@@ -22,7 +22,7 @@
 #include <QObject>
 #include <QLabel>
 #include <DDialog>
-#include <DPushButton>
+#include <DFrame>
 #include <QButtonGroup>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -33,16 +33,16 @@ class CSchceduleCtrlDlg : public DDialog
     Q_OBJECT
 public:
     explicit CSchceduleCtrlDlg(QWidget *parent = nullptr);
-    DPushButton *addPushButton(QString btName, int type = 0);
-    void setTitleName(QString tileName);
+    QAbstractButton *addPushButton(QString btName, int type = 0);
+    QAbstractButton *addsuggestButton(QString btName, bool type = false);
+    QAbstractButton *addWaringButton(QString btName, bool type = false);
     void setText(QString str);
     void setInformativeText(QString str);
-    DPushButton *clickButton();
-    void updatesize();
+    int clickButton();
+
 private:
     void initUI();
     void initConnection();
-
 private slots:
     void buttonJudge(int id);
 private:
@@ -52,9 +52,12 @@ private:
     QLabel                           *m_Title;
     int                              m_id = -1;
     QButtonGroup                     *m_Buttongroup;
-    QVector<DPushButton *>            m_buttonlist;
     QVBoxLayout                      *m_mainBoxLayout;
     QHBoxLayout                      *m_btBoxLayout;
+    DFrame *gwi = nullptr;
+    QFont labelF;
+    QFont labelT;
+    QVector<QString> str_btName;
 };
 
 #endif // MYSCHCEDULEVIEW_H

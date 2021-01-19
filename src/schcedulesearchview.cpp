@@ -37,7 +37,8 @@
 #include "schcedulectrldlg.h"
 #include "myschceduleview.h"
 DGUI_USE_NAMESPACE
-CSchceduleSearchItem::CSchceduleSearchItem( QWidget *parent): DLabel(parent)
+CSchceduleSearchItem::CSchceduleSearchItem(QWidget *parent)
+    : DLabel(parent)
 {
     //setMargin(0);
     m_editAction = new QAction(tr("Edit"), this);
@@ -64,7 +65,7 @@ void CSchceduleSearchItem::setSplitLineColor(QColor color1)
     m_splitlinecolor = color1;
 }
 
-void CSchceduleSearchItem::setText( QColor tcolor, QFont font)
+void CSchceduleSearchItem::setText(QColor tcolor, QFont font)
 {
     m_ttextcolor = tcolor;
     m_tfont = font;
@@ -76,7 +77,7 @@ void CSchceduleSearchItem::setTimeC(QColor tcolor, QFont font)
     m_timefont = font;
 }
 
-void CSchceduleSearchItem::setData( ScheduleDtailInfo vScheduleInfo, QDate date)
+void CSchceduleSearchItem::setData(ScheduleDtailInfo vScheduleInfo, QDate date)
 {
     m_ScheduleInfo = vScheduleInfo;
     m_date = date;
@@ -100,7 +101,7 @@ void CSchceduleSearchItem::setTheMe(int type)
         m_presscolor.textColor = "#FFFFFF";
         m_presscolor.textColor.setAlphaF(1);
 
-        m_hovercolor.background= "#FFFFFF";
+        m_hovercolor.background = "#FFFFFF";
         m_hovercolor.background.setAlphaF(0.2);
         m_hovercolor.timeColor = "#6D7C88";
         m_hovercolor.timeColor.setAlphaF(1);
@@ -114,7 +115,7 @@ void CSchceduleSearchItem::setTheMe(int type)
         m_presscolor.textColor = "#FFFFFF";
         m_presscolor.textColor.setAlphaF(1);
 
-        m_hovercolor.background= "#000000";
+        m_hovercolor.background = "#000000";
         m_hovercolor.background.setAlphaF(0.2);
         m_hovercolor.timeColor = "#526A7F";
         m_hovercolor.timeColor.setAlphaF(1);
@@ -143,24 +144,17 @@ void CSchceduleSearchItem::slotDelete()
 
         msgBox.setText(tr("You are deleting an event."));
         msgBox.setInformativeText(tr("Are you sure you want to delete this event?"));
-        DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-        DPushButton *yesButton = msgBox.addPushButton(tr("Delete"), 1);
-        msgBox.updatesize();
-        DPalette pa = yesButton->palette();
-        if (themetype == 0 || themetype == 1) {
-            pa.setColor(DPalette::ButtonText, Qt::red);
-
-        } else {
-            pa.setColor(DPalette::ButtonText, "#FF5736");
-
-        }
-        yesButton->setPalette(pa);
+        //设置按钮文字
+        msgBox.addPushButton(tr("Cancel"), true);
+        msgBox.addWaringButton(tr("Delete"), true);
         msgBox.exec();
-
-        if (msgBox.clickButton() == noButton) {
+        //是否删除
+        if (msgBox.clickButton() == 0) {
+            //取消
             emit signalViewtransparentFrame(0);
             return;
-        } else if (msgBox.clickButton() == yesButton) {
+        } else if (msgBox.clickButton() == 1) {
+            //删除
             CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->deleteScheduleInfoById(m_ScheduleInfo.id);
         }
     } else {
@@ -169,73 +163,62 @@ void CSchceduleSearchItem::slotDelete()
 
             msgBox.setText(tr("You are deleting an event."));
             msgBox.setInformativeText(tr("Do you want to delete all occurrences of this event, or only the selected occurrence?"));
-            DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-            DPushButton *yesallbutton = msgBox.addPushButton(tr("Delete All"));
-            DPushButton *yesButton = msgBox.addPushButton(tr("Delete Only This Event"));
-
-
-            msgBox.updatesize();
-            DPalette pa = yesButton->palette();
-            if (themetype == 0 || themetype == 1) {
-                pa.setColor(DPalette::ButtonText, Qt::white);
-                pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-                pa.setColor(DPalette::Light, QColor("#0098FF"));
-            } else {
-                pa.setColor(DPalette::ButtonText, "#B8D3FF");
-                pa.setColor(DPalette::Dark, QColor("#0056C1"));
-                pa.setColor(DPalette::Light, QColor("#004C9C"));
-            }
-            yesButton->setPalette(pa);
+            //设置按钮文字
+            msgBox.addPushButton(tr("Cancel"));
+            msgBox.addPushButton(tr("Delete All"));
+            msgBox.addWaringButton(tr("Delete Only This Event"));
             msgBox.exec();
-
-            if (msgBox.clickButton() == noButton) {
+            //各个按钮功能
+            if (msgBox.clickButton() == 0) {
+                //取消
                 emit signalViewtransparentFrame(0);
                 return;
-            } else if (msgBox.clickButton() == yesallbutton) {
+            } else if (msgBox.clickButton() == 1) {
+                //删除所有
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->deleteScheduleInfoById(m_ScheduleInfo.id);
-            } else if (msgBox.clickButton() == yesButton) {
-
+            } else if (msgBox.clickButton() == 2) {
+                //仅删除这个日程
                 ScheduleDtailInfo newschedule;
+                //根据id查找点击日程
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_ScheduleInfo.id, newschedule);
+                //忽略需要删除的日程
                 newschedule.ignore.append(m_ScheduleInfo.beginDateTime);
+                //更新日程信息
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->updateScheduleInfo(newschedule);
             }
         } else {
             CSchceduleCtrlDlg msgBox;
             msgBox.setText(tr("You are deleting an event."));
             msgBox.setInformativeText(tr("Do you want to delete this and all future occurrences of this event, or only the selected occurrence?"));
-            DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-            DPushButton *yesallbutton = msgBox.addPushButton(tr("Delete All Future Events"));
-            DPushButton *yesButton = msgBox.addPushButton(tr("Delete Only This Event"));
-            msgBox.updatesize();
-            DPalette pa = yesButton->palette();
-            if (themetype == 0 || themetype == 1) {
-                pa.setColor(DPalette::ButtonText, Qt::white);
-                pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-                pa.setColor(DPalette::Light, QColor("#0098FF"));
-            } else {
-                pa.setColor(DPalette::ButtonText, "#B8D3FF");
-                pa.setColor(DPalette::Dark, QColor("#0056C1"));
-                pa.setColor(DPalette::Light, QColor("#004C9C"));
-            }
-            yesButton->setPalette(pa);
+            //设置按钮文字
+            msgBox.addPushButton(tr("Cancel"));
+            msgBox.addPushButton(tr("Delete All Future Events"));
+            msgBox.addWaringButton(tr("Delete Only This Event"));
             msgBox.exec();
-
-            if (msgBox.clickButton() == noButton) {
+            //各个按钮功能
+            if (msgBox.clickButton() == 0) {
+                //取消
                 emit signalViewtransparentFrame(0);
                 return;
-            } else if (msgBox.clickButton() == yesallbutton) {
+            } else if (msgBox.clickButton() == 1) {
+                //删除未来所有
                 ScheduleDtailInfo newschedule;
+                //根据id查找点击的日程
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_ScheduleInfo.id, newschedule);
+                //设置日程结束重复于的类型
                 newschedule.enddata.type = 2;
+                //设置重复日程结束日期
                 newschedule.enddata.date = m_ScheduleInfo.beginDateTime.addDays(-1);
+                //更新日程信息
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->updateScheduleInfo(newschedule);
-
-            } else if (msgBox.clickButton() == yesButton) {
-
+            } else if (msgBox.clickButton() == 2) {
+                //仅删除这个日程
                 ScheduleDtailInfo newschedule;
+                //根据id查找点击的日程
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_ScheduleInfo.id, newschedule);
+                //忽略这个日程
                 newschedule.ignore.append(m_ScheduleInfo.beginDateTime);
+                //更新日程信息
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->updateScheduleInfo(newschedule);
             }
         }
@@ -250,7 +233,7 @@ void CSchceduleSearchItem::slotDoubleEvent(int type)
     emit signalsDelete(this);
 }
 
-void CSchceduleSearchItem::paintEvent( QPaintEvent *e )
+void CSchceduleSearchItem::paintEvent(QPaintEvent *e)
 {
     int labelwidth = width();
     int labelheight = height();
@@ -386,7 +369,7 @@ void CSchceduleSearchItem::paintEvent( QPaintEvent *e )
     painter.drawText(QRect(durationSize + 17 + 9, 6, tilenameW, labelheight), Qt::AlignLeft, tstr);
     painter.end();
 }
-void CSchceduleSearchItem::contextMenuEvent( QContextMenuEvent *event )
+void CSchceduleSearchItem::contextMenuEvent(QContextMenuEvent *event)
 {
     if (m_ScheduleInfo.type.ID == 4)
         return;
@@ -569,7 +552,7 @@ void CSchceduleSearchView::updateDateShow()
     QDate topdate = tcurrentdata;
     for (int i = 0; i < m_vlistData.size(); ++i) {
         int d = qAbs(m_vlistData.at(i).date.daysTo(tcurrentdata));
-        if ( d<offset) {
+        if (d < offset) {
             offset = d;
             topdate = m_vlistData.at(i).date;
         }
@@ -611,7 +594,7 @@ void CSchceduleSearchView::updateDateShow()
         DLabel *gwi = new DLabel();
         QFont font("SourceHanSansSC-Normal");
         font.setPixelSize(20);
-        gwi->setAlignment(Qt::AlignCenter );
+        gwi->setAlignment(Qt::AlignCenter);
         DPalette daypa = gwi->palette();
         QColor textcolor = DPalette::ToolTipText;
         int themtype = CScheduleDataManage::getScheduleDataManage()->getTheme();
@@ -632,7 +615,7 @@ void CSchceduleSearchView::updateDateShow()
         gwi->setFixedSize(m_maxWidth - 20, 450);
         listItem->setSizeHint(QSize(m_maxWidth, 450)); //每次改变Item的高度
         //listItem->setBackgroundColor(Qt::white);
-        listItem->setFlags(Qt::ItemIsTristate );
+        listItem->setFlags(Qt::ItemIsTristate);
         m_gradientItemList->addItem(listItem);
         m_gradientItemList->setItemWidget(listItem, gwi);
         m_labellist.append(gwi);
@@ -675,7 +658,7 @@ void CSchceduleSearchView::createItemWidget(ScheduleDtailInfo info, QDate date, 
     QListWidgetItem *listItem = new QListWidgetItem;
     listItem->setSizeHint(QSize(m_maxWidth - 5, 36)); //每次改变Item的高度
     //listItem->setBackgroundColor(Qt::white);
-    listItem->setFlags(Qt::ItemIsTristate );
+    listItem->setFlags(Qt::ItemIsTristate);
     m_gradientItemList->addItem(listItem);
     m_gradientItemList->setItemWidget(listItem, gwi);
     m_labellist.append(gwi);
@@ -707,14 +690,14 @@ QListWidgetItem *CSchceduleSearchView::createItemWidget(QDate date)
     QListWidgetItem *listItem = new QListWidgetItem;
     listItem->setSizeHint(QSize(m_maxWidth - 5, 36)); //每次改变Item的高度
     //listItem->setBackgroundColor(Qt::white);
-    listItem->setFlags(Qt::ItemIsTristate );
+    listItem->setFlags(Qt::ItemIsTristate);
     m_gradientItemList->addItem(listItem);
     m_gradientItemList->setItemWidget(listItem, gwi);
     m_labellist.append(gwi);
     return listItem;
 }
 
-void CSchceduleSearchView::slotdeleteitem( CSchceduleSearchItem *item )
+void CSchceduleSearchView::slotdeleteitem(CSchceduleSearchItem *item)
 {
     emit signalsUpdateShcedule(item->getData().id);
     updateDateShow();
@@ -796,7 +779,7 @@ void CSchceduleSearchView::resizeEvent(QResizeEvent *event)
         m_labellist.at(0)->setFixedSize(m_maxWidth, height() * 0.7978);
         m_labellist.at(0)->update();
     }
-    if (m_gradientItemList->count() >1) {
+    if (m_gradientItemList->count() > 1) {
         if (m_currentItem != nullptr) {
             m_gradientItemList->scrollToItem(m_currentItem, QAbstractItemView::PositionAtTop);
         }
@@ -862,7 +845,7 @@ void CSchceduleSearchDateItem::mousePressEvent(QMouseEvent *event)
 }
 
 CScheduleListWidget::CScheduleListWidget(QWidget *parent)
-    : DListWidget (parent)
+    : DListWidget(parent)
 {
 
 }

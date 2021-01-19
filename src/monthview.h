@@ -101,8 +101,8 @@ signals:
     void signalsupdatescheduleD(QWidget *w, QDate begin, QDate end);
 protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
-    void focusOutEvent (QFocusEvent *event ) Q_DECL_OVERRIDE;
-    void focusInEvent (QFocusEvent *event )Q_DECL_OVERRIDE;
+    void focusOutEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
+    void focusInEvent(QFocusEvent *event) Q_DECL_OVERRIDE;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseMoveEvent(QMouseEvent *event)Q_DECL_OVERRIDE;
 private:
@@ -190,6 +190,10 @@ private:
     int                   m_themetype  = 1;
     bool           m_sflag = true;
     SchecduleRemindWidget *m_RemindWidget;
+    //今天的文字颜色
+    QColor m_dayNumCurrentColor;
+    //今天的颜色
+    QColor m_currentColor;
 };
 
 #endif // MYCALENDARWIDGET_H

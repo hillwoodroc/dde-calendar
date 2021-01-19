@@ -18,6 +18,7 @@
  */
 
 #include "monthdayview.h"
+#include "scheduledatamanage.h"
 #include <QHBoxLayout>
 #include <QPainterPath>
 #include "constants.h"
@@ -126,7 +127,6 @@ void CMonthDayView::setTheMe(int type)
         m_defaultTextColor = Qt::black;
         m_backgrounddefaultColor = Qt::white;
         m_currentDayTextColor = Qt::white;
-        m_backgroundcurrentDayColor = "#0081FF";
         m_fillColor = "#FFFFFF";
         frameclor = m_fillColor;
         m_fillColor.setAlphaF(0);
@@ -137,13 +137,12 @@ void CMonthDayView::setTheMe(int type)
         framecolor.setAlphaF(0.5);
         m_backgrounddefaultColor = framecolor;
         m_currentDayTextColor = "#C0C6D4";
-        m_backgroundcurrentDayColor = "#0059D2";
         m_fillColor = "#FFFFFF";
         m_fillColor.setAlphaF(0.05);
         frameclor = m_fillColor;
         m_fillColor.setAlphaF(0);
     }
-
+    m_backgroundcurrentDayColor = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
     DPalette anipa = palette();
     anipa.setColor(DPalette::Background, frameclor);
     setPalette(anipa);
@@ -161,7 +160,7 @@ void CMonthDayView::setwindowFixw(int w, int rw)
         m_cellList[c]->update();
     }
     if ((m_realwidth   < m_fixwidth) && m_searchfalg) {
-        int t_num = qRound((m_fixwidth - m_realwidth ) / w2 / 2.0);
+        int t_num = qRound((m_fixwidth - m_realwidth) / w2 / 2.0);
         QVector<bool> vindex;
         vindex.resize(12);
         vindex.fill(true);
@@ -188,6 +187,8 @@ void CMonthDayView::setsearchfalg(bool flag)
 
 void CMonthDayView::paintCell(QWidget *cell)
 {
+    //选择的rect颜色
+    m_selectColor = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
     const QRect rect(0, 0, cell->width(), cell->height());
 
     const int pos = m_cellList.indexOf(cell);
@@ -249,54 +250,20 @@ void CMonthDayView::paintCell(QWidget *cell)
     const QString dayNum = QString::number(m_days[pos].month());
 
     if (isSelectDay) {
-#if 0
-        QRect fillRect(3, 3, cell->width() - 6, cell->height() - 6);
-        int hh = 0;
-
-        if (cell->width() > cell->height()) {
-            hh = cell->height();
-            fillRect = QRect((cell->width() - hh) / 2.0 + 0.5, 4, hh, hh);
-        } else {
-            hh = cell->width();
-            fillRect = QRect(0, (cell->height() - hh) / 2.0  + 4, hh, hh);
-        }
-
-        QPixmap pixmap;
-        if (m_themetype == 2)
-            pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/darkchoose30X30_checked .svg").scaled(hh, hh, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        else {
-            pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/choose30X30_checked .svg").scaled(hh, hh, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        }
-        pixmap.setDevicePixelRatio(devicePixelRatioF());
-        painter.save();
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setRenderHint(QPainter::HighQualityAntialiasing);
-        painter.setRenderHint(QPainter::SmoothPixmapTransform);
-        painter.drawPixmap(fillRect, pixmap);
-        painter.restore();
-        painter.setRenderHint(QPainter::HighQualityAntialiasing);
-        painter.setPen(m_currentDayTextColor);
-        painter.drawText(QRect(0, 0, cell->width(), cell->height()), Qt::AlignCenter, dayNum);
-#else
-        QRect fillRect((cell->width() - 36) / 2, (cell->height() - 36) / 2 + 4, 36, 36);
-        QPixmap pixmap;
-        if (m_themetype == 2)
-            pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/darkchoose30X30_checked .svg");
-        else {
-            pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/choose30X30_checked .svg");
-        }
-        pixmap.setDevicePixelRatio(devicePixelRatioF());
-        painter.save();
-        painter.setRenderHint(QPainter::Antialiasing);
-        painter.setRenderHint(QPainter::HighQualityAntialiasing);
-        painter.setRenderHint(QPainter::SmoothPixmapTransform);
-        painter.drawPixmap(fillRect, pixmap);
-        painter.restore();
-        painter.setRenderHint(QPainter::HighQualityAntialiasing);
+        //设置矩形
+        QRectF fillRect((rect.width() - 36) / 2 + rect.x() + 6,
+                        (rect.height() - 36) / 2 + 7 + rect.y(),
+                        24,
+                        24);
+        painter.setBrush(QBrush(m_selectColor));
+        painter.setPen(Qt::NoPen);
+        //绘制圆形
+        painter.setRenderHint(QPainter::Antialiasing); // 反锯齿;
+        painter.drawEllipse(fillRect);
         painter.setPen(m_currentDayTextColor);
         painter.setFont(m_dayNumFont);
-        painter.drawText(QRect(0, 0, cell->width(), cell->height()), Qt::AlignCenter, dayNum);
-#endif
+        //绘制月份
+        painter.drawText(rect, Qt::AlignCenter, dayNum);
     } else {
         if (isCurrentDay) {
             painter.setPen(m_backgroundcurrentDayColor);
@@ -361,7 +328,7 @@ void CMonthDayView::resizeEvent(QResizeEvent *event)
         m_cellList[c]->update();
     }
     if ((m_realwidth   < m_fixwidth) && m_searchfalg) {
-        int t_num = qRound((m_fixwidth - m_realwidth ) / w / 2.0);
+        int t_num = qRound((m_fixwidth - m_realwidth) / w / 2.0);
         QVector<bool> vindex;
         vindex.resize(12);
         vindex.fill(true);
@@ -404,7 +371,7 @@ void CMonthDayView::resizeEvent(QResizeEvent *event)
             m_roundangle[c] = 0;
             m_cellList[c]->update();
         }
-        int t_num = qRound((ww * 12 - width() ) / ww / 2.0);
+        int t_num = qRound((ww * 12 - width()) / ww / 2.0);
         QVector<bool> vindex;
         vindex.resize(12);
         vindex.fill(true);

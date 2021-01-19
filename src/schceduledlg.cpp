@@ -256,22 +256,16 @@ void CSchceduleDlg::slotOkBt()
                 //                    not throughout the state."));
                 //                }
                 msgBox.setInformativeText(tr("Do you want to change all occurrences?"));
-                DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-                DPushButton *yesButton = msgBox.addPushButton(tr("Change All"));
-                msgBox.updatesize();
-                DPalette pa = yesButton->palette();
-                if (themetype == 0 || themetype == 1) {
-                    pa.setColor(DPalette::ButtonText, Qt::red);
-
-                } else {
-                    pa.setColor(DPalette::ButtonText, "#FF5736");
-                }
-                yesButton->setPalette(pa);
+                //设置按钮文字
+                msgBox.addPushButton(tr("Cancel"), true);
+                msgBox.addWaringButton(tr("Change All"), true);
                 msgBox.exec();
-
-                if (msgBox.clickButton() == noButton) {
+                //按钮对应的功能
+                if (msgBox.clickButton() == 0) {
+                    //取消
                     return;
-                } else if (msgBox.clickButton() == yesButton) {
+                } else if (msgBox.clickButton() == 1) {
+                    //修改所有
                     ScheduleDtailInfo updatescheduleData;
                     CScheduleDataManage::getScheduleDataManage()
                     ->getscheduleDataCtrl()
@@ -291,22 +285,16 @@ void CSchceduleDlg::slotOkBt()
                 // 34) * devicePixelRatioF()));
                 msgBox.setText(tr("You are changing the repeating rule of this event."));
                 msgBox.setInformativeText(tr("Do you want to change all occurrences?"));
-                DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-                DPushButton *yesButton = msgBox.addPushButton(tr("Change All"));
-                msgBox.updatesize();
-                DPalette pa = yesButton->palette();
-                if (themetype == 0 || themetype == 1) {
-                    pa.setColor(DPalette::ButtonText, Qt::red);
-
-                } else {
-                    pa.setColor(DPalette::ButtonText, "#FF5736");
-                }
-                yesButton->setPalette(pa);
+                //设置按钮文字
+                msgBox.addPushButton(tr("Cancel"), true);
+                msgBox.addWaringButton(tr("Change All"), true);
                 msgBox.exec();
-
-                if (msgBox.clickButton() == noButton) {
+                //按钮对应的功能
+                if (msgBox.clickButton() == 0) {
+                    //取消
                     return;
-                } else if (msgBox.clickButton() == yesButton) {
+                } else if (msgBox.clickButton() == 1) {
+                    //修改所有
                     CScheduleDataManage::getScheduleDataManage()
                     ->getscheduleDataCtrl()
                     ->updateScheduleInfo(scheduleDtailInfo);
@@ -321,31 +309,21 @@ void CSchceduleDlg::slotOkBt()
                     msgBox.setInformativeText(
                         tr("Do you want to change only this occurrence of the event, or all "
                            "occurrences?"));
-                    DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-                    DPushButton *yesallbutton = msgBox.addPushButton(tr("All"));
-                    DPushButton *yesButton = msgBox.addPushButton(tr("Only This Event"));
-                    msgBox.updatesize();
-                    DPalette pa = yesButton->palette();
-                    if (themetype == 0 || themetype == 1) {
-                        pa.setColor(DPalette::ButtonText, Qt::white);
-                        pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-                        pa.setColor(DPalette::Light, QColor("#0098FF"));
-                    } else {
-                        pa.setColor(DPalette::ButtonText, "#B8D3FF");
-                        pa.setColor(DPalette::Dark, QColor("#0056C1"));
-                        pa.setColor(DPalette::Light, QColor("#004C9C"));
-                    }
-                    yesButton->setPalette(pa);
+                    //添加按钮设置文字
+                    msgBox.addPushButton(tr("Cancel"));
+                    msgBox.addPushButton(tr("All"));
+                    msgBox.addsuggestButton(tr("Only This Event"));
                     msgBox.exec();
+                    //按钮对应功能
 
-                    if (msgBox.clickButton() == noButton) {
+                    if (msgBox.clickButton() == 0) {
                         return;
-                    } else if (msgBox.clickButton() == yesallbutton) {
+                    } else if (msgBox.clickButton() == 1) {
                         scheduleDtailInfo.ignore.clear();
                         CScheduleDataManage::getScheduleDataManage()
                         ->getscheduleDataCtrl()
                         ->updateScheduleInfo(scheduleDtailInfo);
-                    } else if (msgBox.clickButton() == yesButton) {
+                    } else if (msgBox.clickButton() == 2) {
                         ScheduleDtailInfo newschedule = scheduleDtailInfo;
                         newschedule.rpeat = 0;
                         newschedule.RecurID = 0;
@@ -374,26 +352,15 @@ void CSchceduleDlg::slotOkBt()
                     msgBox.setInformativeText(
                         tr("Do you want to change only this occurrence of the event, or this and "
                            "all future occurrences?"));
-                    DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-                    DPushButton *yesallbutton = msgBox.addPushButton(tr("All Future Events"));
-                    DPushButton *yesButton = msgBox.addPushButton(tr("Only This Event"));
-                    msgBox.updatesize();
-                    DPalette pa = yesButton->palette();
-                    if (themetype == 0 || themetype == 1) {
-                        pa.setColor(DPalette::ButtonText, Qt::white);
-                        pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-                        pa.setColor(DPalette::Light, QColor("#0098FF"));
-                    } else {
-                        pa.setColor(DPalette::ButtonText, "#B8D3FF");
-                        pa.setColor(DPalette::Dark, QColor("#0056C1"));
-                        pa.setColor(DPalette::Light, QColor("#004C9C"));
-                    }
-                    yesButton->setPalette(pa);
+                    //设置按钮文字
+                    msgBox.addPushButton(tr("Cancel"));
+                    msgBox.addPushButton(tr("All Future Events"));
+                    msgBox.addsuggestButton(tr("Only This Event"));
                     msgBox.exec();
-
-                    if (msgBox.clickButton() == noButton) {
+                    //按钮对应功能
+                    if (msgBox.clickButton() == 0) {
                         return;
-                    } else if (msgBox.clickButton() == yesallbutton) {
+                    } else if (msgBox.clickButton() == 1) {
                         ScheduleDtailInfo newschedule = scheduleDtailInfo;
                         newschedule.RecurID = 0;
                         newschedule.id = 0;
@@ -410,7 +377,7 @@ void CSchceduleDlg::slotOkBt()
                         CScheduleDataManage::getScheduleDataManage()
                         ->getscheduleDataCtrl()
                         ->updateScheduleInfo(updatescheduleData);
-                    } else if (msgBox.clickButton() == yesButton) {
+                    } else if (msgBox.clickButton() == 2) {
                         ScheduleDtailInfo newschedule = scheduleDtailInfo;
                         newschedule.rpeat = 0;
                         newschedule.RecurID = 0;
@@ -566,6 +533,25 @@ void CSchceduleDlg::sloteRpeatactivated(int index)
     }
 }
 
+void CSchceduleDlg::slotBtClick(int buttonIndex, QString buttonName)
+{
+    Q_UNUSED(buttonName)
+    switch (buttonIndex) {
+    case 0: {
+        //取消
+        slotCancelBt();
+        break;
+    }
+    case 1: {
+        //确定
+        slotOkBt();
+        break;
+    }
+    default:
+        break;
+    }
+}
+
 bool CSchceduleDlg::eventFilter(QObject *obj, QEvent *pEvent)
 {
     if (obj == m_textEdit) {
@@ -656,7 +642,7 @@ void CSchceduleDlg::initUI()
     m_typeLabel->setFixedSize(78, 36);
     m_typeComBox = new DComboBox();
     m_typeComBox->setFixedSize(319, 36);
-    m_typeComBox->setIconSize(QSize(24,24));
+    m_typeComBox->setIconSize(QSize(24, 24));
     m_typeComBox->insertItem(0,
                              QIcon(DHiDPIHelper::loadNxPixmap(":/resources/icon/icon_type_work.svg")
                                    .scaled(QSize(24, 24) * devicePixelRatioF())),
@@ -682,7 +668,7 @@ void CSchceduleDlg::initUI()
     conttelabellayout->setMargin(0);
     m_contentLabel = new QLabel();
     QFontMetrics fontWidth_contentlabel(mlabelF);
-    QString str_contentlabel = fontWidth_contentlabel.elidedText(tr("Description:"),Qt::ElideRight,68);
+    QString str_contentlabel = fontWidth_contentlabel.elidedText(tr("Description:"), Qt::ElideRight, 68);
     m_contentLabel->setText(str_contentlabel);
     m_contentLabel->setFont(mlabelF);
     m_contentLabel->setPalette(pa);
@@ -802,7 +788,7 @@ void CSchceduleDlg::initUI()
     rminQLabellayout->setMargin(0);
     m_remindSetLabel = new QLabel();
     QFontMetrics fontWidth_remindSetLabel(mlabelF);
-    QString str_remindSetLabel = fontWidth_remindSetLabel.elidedText(tr("Remind Me:"),Qt::ElideRight,68);
+    QString str_remindSetLabel = fontWidth_remindSetLabel.elidedText(tr("Remind Me:"), Qt::ElideRight, 68);
     m_remindSetLabel->setText(str_remindSetLabel);
     m_remindSetLabel->setFont(mlabelF);
     m_remindSetLabel->setPalette(pa);
@@ -843,7 +829,7 @@ void CSchceduleDlg::initUI()
     endrepeatLabellayout->setMargin(0);
     m_endrepeatLabel = new QLabel();
     QFontMetrics fontWidth_endrepeatLabel(mlabelF);
-    QString str_endrepeatLabel = fontWidth_endrepeatLabel.elidedText(tr("End Repeat:"),Qt::ElideRight,68);
+    QString str_endrepeatLabel = fontWidth_endrepeatLabel.elidedText(tr("End Repeat:"), Qt::ElideRight, 68);
     m_endrepeatLabel->setText(str_endrepeatLabel);
     m_endrepeatLabel->setFont(mlabelF);
     m_endrepeatLabel->setPalette(pa);
@@ -899,45 +885,20 @@ void CSchceduleDlg::initUI()
     m_endrepeatWidget->setLayout(endrepeatLabellayout);
     maintlayout->addWidget(m_endrepeatWidget);
     m_endrepeatWidget->setVisible(false);
-    QHBoxLayout *downlayout = new QHBoxLayout;
-    downlayout->setContentsMargins(0, 0, 0, 0);
-    m_cancelBt = new DPushButton(tr("Cancel"));
-    m_cancelBt->setFixedSize(189, 36);
-    m_OkBt = new DPushButton(tr("Save"));
-    m_OkBt->setFixedSize(189, 36);
-    DPalette okpa = m_OkBt->palette();
-    if (themetype == 0 || themetype == 1) {
-        okpa.setColor(DPalette::ButtonText, Qt::white);
-        okpa.setColor(DPalette::Dark, QColor("#25B7FF"));
-        okpa.setColor(DPalette::Light, QColor("#0098FF"));
-    } else {
-        okpa.setColor(DPalette::ButtonText, "#B8D3FF");
-        okpa.setColor(DPalette::Dark, QColor("#0056C1"));
-        okpa.setColor(DPalette::Light, QColor("#004C9C"));
-    }
+    //添加按钮
+    addButton(tr("Cancel"));
+    addButton(tr("Save"), false, DDialog::ButtonRecommend);
 
-    m_OkBt->setPalette(okpa);
-    downlayout->addWidget(m_cancelBt);
-    DVerticalLine *verline = new DVerticalLine(this);
-    verline->setFixedSize(3, 28);
-    downlayout->addWidget(verline);
-    downlayout->addWidget(m_OkBt);
+    for (int i = 0; i < buttonCount(); i++) {
+        QAbstractButton *button = getButton(i);
+        button->setFixedSize(189, 36);
+    }
     m_gwi = new DFrame(this);
     m_gwi->setFrameShape(QFrame::NoFrame);
-    maintlayout->addLayout(downlayout);
-    // maintlayout->addStretch();
     m_gwi->setLayout(maintlayout);
-    // m_gwi->setGeometry(0, 68, 438, 412);
-    DPalette anipa = m_gwi->palette();
-    QColor color = "#F8F8F8";
-    color.setAlphaF(0.0);
-    anipa.setColor(DPalette::Background, color);
-    // m_gwi->setAutoFillBackground(true);
-    // m_gwi->setPalette(anipa);
-    // m_gwi->setBackgroundRole(DPalette::Background);
     addContent(m_gwi, Qt::AlignCenter);
-    // setLayout(maintlayout);
     initDateEdit();
+
     if (m_type == 1)
         slotallDayStateChanged(0);
     setFocus();
@@ -945,8 +906,7 @@ void CSchceduleDlg::initUI()
 
 void CSchceduleDlg::initConnection()
 {
-    connect(m_cancelBt, &DPushButton::clicked, this, &CSchceduleDlg::slotCancelBt);
-    connect(m_OkBt, &DPushButton::clicked, this, &CSchceduleDlg::slotOkBt);
+    connect(this, &DDialog::buttonClicked, this, &CSchceduleDlg::slotBtClick);
     connect(m_textEdit, &DTextEdit::textChanged, this, &CSchceduleDlg::slotTextChange);
 
     connect(m_allDayCheckbox, &DCheckBox::stateChanged, this,
@@ -956,9 +916,6 @@ void CSchceduleDlg::initConnection()
     connect(m_endrepeatCombox, QOverload<int>::of(&QComboBox::activated), this,
             &CSchceduleDlg::sloteRpeatactivated);
     connect(m_beginDateEdit, &DDateEdit::userDateChanged, this, &CSchceduleDlg::slotBDateEidtInfo);
-
-    // connect(m_eCustomDateW, &CCustomCalendarWidget::signalSetCalendarTime, this,
-    // &CSchceduleDlg::slotEDateEidtInfo);
 
     QShortcut *shortcut = new QShortcut(this);
     shortcut->setKey(QKeySequence(QLatin1String("ESC")));

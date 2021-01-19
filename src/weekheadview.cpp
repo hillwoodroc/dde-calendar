@@ -19,6 +19,7 @@
 
 #include "weekheadview.h"
 #include "calendardbus.h"
+#include "scheduledatamanage.h"
 
 #include <QHBoxLayout>
 #include <QPainter>
@@ -31,7 +32,7 @@
 #include <QMenu>
 #include <DPalette>
 #include <DHiDPIHelper>
-#include <QMouseEvent> 
+#include <QMouseEvent>
 #include "customframe.h"
 DGUI_USE_NAMESPACE
 CWeekHeadView::CWeekHeadView(QWidget *parent) : DFrame(parent)
@@ -82,18 +83,18 @@ CWeekHeadView::CWeekHeadView(QWidget *parent) : DFrame(parent)
 
     connect(this, &CWeekHeadView::dateSelected, this, &CWeekHeadView::handleCurrentDateChanged);
     setFrameRounded(true);
-    m_monthList.append( "一月" );
-    m_monthList.append( "二月");
-    m_monthList.append( "三月" );
-    m_monthList.append( "四月" );
-    m_monthList.append( "五月" );
-    m_monthList.append( "六月" );
-    m_monthList.append( "七月" );
-    m_monthList.append( "八月");
-    m_monthList.append( "九月" );
-    m_monthList.append( "十月" );
-    m_monthList.append( "十一月");
-    m_monthList.append( "十二月");
+    m_monthList.append("一月");
+    m_monthList.append("二月");
+    m_monthList.append("三月");
+    m_monthList.append("四月");
+    m_monthList.append("五月");
+    m_monthList.append("六月");
+    m_monthList.append("七月");
+    m_monthList.append("八月");
+    m_monthList.append("九月");
+    m_monthList.append("十月");
+    m_monthList.append("十一月");
+    m_monthList.append("十二月");
 }
 
 void CWeekHeadView::handleCurrentDateChanged(const QDate date, const CaLunarDayInfo &detail)
@@ -156,7 +157,6 @@ void CWeekHeadView::setTheMe(int type)
         m_defaultTextColor = "#6F6F6F";
         m_currentDayTextColor = "#FFFFFF";
         m_defaultLunarColor = "#898989";
-        m_weekendsTextColor = "#0887FF";
         m_currentMonthColor = "#000000";
         m_backgroudColor = "#E6EEF2";
         m_solofestivalLunarColor = "#4DFF7272";
@@ -181,12 +181,13 @@ void CWeekHeadView::setTheMe(int type)
         m_defaultTextColor = "#C0C6D4";
         m_currentDayTextColor = "#C0C6D4";
         m_defaultLunarColor = "#6886BA";
-        m_weekendsTextColor = "#0887FF";
         m_currentMonthColor = "#000000";
         m_backgroudColor = "#82AEC1";
         m_backgroudColor.setAlphaF(0.1);
         m_solofestivalLunarColor = "#4DFF7272";
     }
+    //周末文字颜色，系统活动色
+    m_weekendsTextColor = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
     for (int i = 0; i != 7; ++i)
         m_cellList.at(i)->update();
 }
@@ -430,7 +431,6 @@ void CWeekHeadView::paintCell(QWidget *cell)
     const QRect rect(0, 0, cell->width(), cell->height());
 
     const int pos = m_cellList.indexOf(cell);
-    const int type = getDateType(m_days[pos]);
 
     const bool isCurrentDay = getCellDate(pos) == QDate::currentDate();
     // const bool isSelectedCell = pos == m_selectedCell;
@@ -487,171 +487,32 @@ void CWeekHeadView::paintCell(QWidget *cell)
     if (bh < 0) {
         bh = 2;
     }
-#if 0
-    if (isSelectedCell) {
-        if (m_showState & ShowLunar) {
-            QRect fillRect(bw - 5, bh - 2, 36, 36);
-            /*
-            painter.setRenderHints(QPainter::HighQualityAntialiasing);
-            painter.setBrush(QBrush(m_backgroundCircleColor));
-            painter.setPen(Qt::NoPen);
-            painter.drawEllipse(fillRect);
-            painter.save();
-            QRect fillRect1(bw + 1, bh, 24, 24);
-            painter.setRenderHints(QPainter::HighQualityAntialiasing);
-            QPen pen;
-            pen.setColor(m_backgroundShowColor);
-            pen.setWidthF(1.5);
-            painter.setBrush(Qt::NoBrush);
-            painter.setPen(pen);
-            painter.drawEllipse(fillRect1);
-            painter.restore();*/
 
-            QPixmap pixmap;
-            if (m_themetype == 2)
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/darkchoose30X30_checked .svg").scaled(fillRect.width() + 8, fillRect.height() + 8, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            else {
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/choose30X30_checked .svg").scaled(fillRect.width() + 8, fillRect.height() + 8, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            }
-            pixmap.setDevicePixelRatio(devicePixelRatioF());
+    if (isSelectedCell) {
+        //选择的cell
+        if (m_showState & ShowLunar) {
+            //绘制有阴历信息的当天背景圆
+            QRect fillRect(bw - 2, bh, 26, 26);
             painter.save();
             painter.setRenderHint(QPainter::Antialiasing);
-            painter.setRenderHint(QPainter::HighQualityAntialiasing);
-            painter.setRenderHint(QPainter::SmoothPixmapTransform);
-            painter.drawPixmap(fillRect, pixmap);
+            //设置颜色为系统活动色
+            painter.setBrush(QBrush(CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor()));
+            painter.setPen(Qt::NoPen);
+            //绘制圆
+            painter.drawEllipse(fillRect);
             painter.restore();
         } else {
-            QRect fillRect(bw + 2, bh - 1, 36, 36);
-            /*
-            painter.setRenderHints(QPainter::HighQualityAntialiasing);
-            painter.setBrush(QBrush(m_backgroundCircleColor));
+            //绘制没有阴历信息的当天背景圆
+            QRect fillRect(cell->width() - (cell->width() / 2) + 1, bh - 1, 26, 26);
+            painter.save();
+            painter.setRenderHint(QPainter::Antialiasing);
+            //设置颜色为系统活动色
+            painter.setBrush(QBrush(CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor()));
             painter.setPen(Qt::NoPen);
+            //绘制圆
             painter.drawEllipse(fillRect);
-
-            QRect fillRect1(bw + 13, bh + 1, 24, 24);
-            painter.setRenderHints(QPainter::HighQualityAntialiasing);
-            QPen pen;
-            pen.setColor(m_backgroundShowColor);
-            pen.setWidthF(1.5);
-            painter.setBrush(Qt::NoBrush);
-            painter.setPen(pen);
-            painter.drawEllipse(fillRect1);
-            painter.restore();*/
-            QPixmap pixmap;
-            if (m_themetype == 2)
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/darkchoose30X30_checked .svg").scaled(fillRect.width() + 8, fillRect.height() + 8, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            else {
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/choose30X30_checked .svg").scaled(fillRect.width() + 8, fillRect.height() + 8, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            }
-            pixmap.setDevicePixelRatio(devicePixelRatioF());
-            painter.save();
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setRenderHint(QPainter::HighQualityAntialiasing);
-            painter.setRenderHint(QPainter::SmoothPixmapTransform);
-            painter.drawPixmap(fillRect, pixmap);
             painter.restore();
         }
-
-    }
-    QLocale locale;
-    const QString dayNum = getCellDayNum(pos);
-    const QString dayLunar = getLunar(pos);
-    const QString dayWeek = locale.dayName(d ? d : 7, QLocale::ShortFormat);
-
-    painter.save();
-    painter.setPen(Qt::SolidLine);
-    // draw text of day
-    if (isSelectedCell) {
-        painter.setPen(m_currentDayTextColor);
-    } else if (isCurrentDay) {
-        painter.setPen(m_weekendsTextColor);
-    } else {
-        if (d == 6 || d == 7)
-            painter.setPen(m_weekendsTextColor);
-        else
-            painter.setPen(m_defaultTextColor);
-    }
-
-//    painter.drawRect(rect);
-    painter.setFont(m_dayNumFont);
-    if (m_showState & ShowLunar) {
-        painter.drawText(QRect(bw + 1, bh, 24, 24), Qt::AlignCenter, dayNum);
-        if (d == 6 || d == 7)
-            painter.setPen(m_weekendsTextColor);
-        else
-            painter.setPen(m_defaultTextColor);
-        painter.drawText(QRect(bw + 24, bh, 30, 25), Qt::AlignCenter, dayWeek);
-
-    } else {
-        painter.drawText(QRect(bw, bh, 40, 26), Qt::AlignCenter, dayNum);
-        if (d == 6 || d == 7)
-            painter.setPen(m_weekendsTextColor);
-        else
-            painter.setPen(m_defaultTextColor);
-        painter.drawText(QRect(bw + 40, bh, 40, 26), Qt::AlignCenter, dayWeek);
-    }
-    // draw text of day type
-    if (m_showState & ShowLunar) {
-        if (cell->width() > 100) {
-            if (d == 6 || d == 7)
-                painter.setPen(m_weekendsTextColor);
-            else
-                painter.setPen(m_defaultLunarColor);
-
-            painter.drawText(QRect(bw + 52 + 10, bh, 50, 25), Qt::AlignLeft, dayLunar);
-            CaLunarDayInfo dayInfo = getCaLunarDayInfo(pos);
-            //if (!dayInfo.mSolarFestival.isEmpty()) {
-            if (false) {
-                QRect fillRect = QRect(2, 39, 106, 15);
-                painter.setPen(Qt::red);
-                QFont solofont = m_dayNumFont;
-                solofont.setPixelSize(10);
-                painter.setFont(solofont);
-                QFontMetrics fm = painter.fontMetrics();
-                while (fm.width(dayInfo.mSolarFestival) > 108) {
-                    solofont.setPixelSize(solofont.pixelSize() - 1);
-                    painter.setFont(solofont);
-                    fm = painter.fontMetrics();
-                }
-                painter.drawText(fillRect, Qt::AlignRight, dayInfo.mSolarFestival);
-            }
-        }
-    }
-    painter.restore();
-#else
-    if (isSelectedCell) {
-        if (m_showState & ShowLunar) {
-            QRect fillRect(bw - 7, bh - 2, 36, 36);
-            QPixmap pixmap;
-            if (m_themetype == 2)
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/darkchoose30X30_checked .svg");
-            else {
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/choose30X30_checked .svg");
-            }
-            pixmap.setDevicePixelRatio(devicePixelRatioF());
-            painter.save();
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setRenderHint(QPainter::HighQualityAntialiasing);
-            painter.setRenderHint(QPainter::SmoothPixmapTransform);
-            painter.drawPixmap(fillRect, pixmap);
-            painter.restore();
-        } else {
-            QRect fillRect(bw, bh - 1, 36, 36);
-            QPixmap pixmap;
-            if (m_themetype == 2)
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/darkchoose30X30_checked .svg");
-            else {
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/choose30X30_checked .svg");
-            }
-            pixmap.setDevicePixelRatio(devicePixelRatioF());
-            painter.save();
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setRenderHint(QPainter::HighQualityAntialiasing);
-            painter.setRenderHint(QPainter::SmoothPixmapTransform);
-            painter.drawPixmap(fillRect, pixmap);
-            painter.restore();
-        }
-
     }
     QLocale locale;
     const QString dayNum = getCellDayNum(pos);
@@ -700,28 +561,9 @@ void CWeekHeadView::paintCell(QWidget *cell)
 
             painter.drawText(QRect(bw + 52 + 10, bh, 50, 25), Qt::AlignLeft, dayLunar);
             CaLunarDayInfo dayInfo = getCaLunarDayInfo(pos);
-            //if (!dayInfo.mSolarFestival.isEmpty()) {
-            if (false) {
-                QRect fillRect = QRect(2, 39, 106, 15);
-                painter.setPen(Qt::red);
-                QFont solofont = m_dayNumFont;
-                solofont.setPixelSize(10);
-                painter.setFont(solofont);
-                QFontMetrics fm = painter.fontMetrics();
-                while (fm.width(dayInfo.mSolarFestival) > 108) {
-                    solofont.setPixelSize(solofont.pixelSize() - 1);
-                    painter.setFont(solofont);
-                    fm = painter.fontMetrics();
-                }
-                painter.drawText(fillRect, Qt::AlignRight, dayInfo.mSolarFestival);
-            }
         }
     }
     painter.restore();
-#endif
-
-
-
     painter.end();
 }
 

@@ -181,7 +181,7 @@ void CYearView::setTheMe(int type)
         setPalette(bpa);
         setBackgroundRole(DPalette::Background);
         // setBColor( Qt::white);
-        m_currentMouth->setTextColor( QColor("#CF0059"));
+        m_currentMouth->setTextColor(QColor("#CF0059"));
 
         m_bnormalColor = "#FFFFFF";
         m_topBorderColor = Qt::red;
@@ -200,7 +200,7 @@ void CYearView::setTheMe(int type)
         m_bnormalColor = "#FFFFFF";
         m_bnormalColor.setAlphaF(0.05);
         //setBColor(m_bnormalColor);
-        m_currentMouth->setTextColor( QColor("#BF1D63"));
+        m_currentMouth->setTextColor(QColor("#BF1D63"));
         // m_currentMouth->setBColor(framecolor);
 
         m_topBorderColor = Qt::red;
@@ -436,6 +436,8 @@ const QDate CYearView::getCellDate(int pos)
 }
 void CYearView::paintCell(QWidget *cell)
 {
+    //高亮的颜色
+    m_highColor = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
     const QRect rect(0, 0, cell->width(), cell->height());
 
     const int pos = m_cellList.indexOf(cell);
@@ -456,13 +458,13 @@ void CYearView::paintCell(QWidget *cell)
 
     CellColor currentColor;
     const int r = cell->width() > cell->height() ? cell->height() * 0.9 : cell->width() * 0.9 ;
-    int fontsize = 12 + (r - 18) *6/ 17;
-    if (fontsize <12) {
+    int fontsize = 12 + (r - 18) * 6 / 17;
+    if (fontsize < 12) {
         fontsize = 12;
     }
     m_dayNumFont.setPixelSize(fontsize);
     m_hightFont.setPixelSize(fontsize);
-    const int x = ( cell->width() - r ) / 2;
+    const int x = (cell->width() - r) / 2;
     const int y = (cell->height() - r) / 2;
     QRect fillRect = QRect(x, y, r, r);
 
@@ -519,86 +521,13 @@ void CYearView::paintCell(QWidget *cell)
         painter.drawText(fillRect, Qt::AlignCenter, dayNum);
 
     } else {
-        //    painter.drawRoundedRect(cell->rect(), 4, 4);
-#if 0
         // draw selected cell background circle
         if (isSelectedCell) {
-            int hh = 0;
-            QRect fillRect;
-            if (cell->width() > cell->height()) {
-                hh = cell->height() + 6;
-                fillRect = QRect((cell->width() - hh) / 2.0 + 0.5 - 2,  cellwidth / cellheight, hh + 4, hh + 4);
-            } else {
-                hh = cell->width() + 6;
-                fillRect = QRect(- 5, (cell->height() - hh) / 2.0 + hh * 0.0625 * cellheight / cellwidth, hh + 4, hh + 4);
-            }
-            QPixmap pixmap;
-            if (m_themetype == 2)
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/darkchoose20X20_checked .svg").scaled(hh + 4, hh + 4, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            else {
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/choose20X20_checked .svg").scaled(hh + 4, hh + 4, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            }
-
-            pixmap.setDevicePixelRatio(devicePixelRatioF());
+            //如果选择了该日期，则设置高亮
             painter.save();
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setRenderHint(QPainter::HighQualityAntialiasing);
-            painter.setRenderHint(QPainter::SmoothPixmapTransform);
-            painter.drawPixmap(fillRect, pixmap);
-            painter.restore();
-
-            // painter.setRenderHints(QPainter::HighQualityAntialiasing);
-            // painter.setBrush(QBrush(m_backgroundCircleColor));
-            // painter.setPen(Qt::NoPen);
-            // painter.drawEllipse(fillRect);
-        }
-
-        painter.setPen(Qt::SolidLine);
-
-        const QString dayNum = getCellDayNum(pos);
-
-        // draw text of day
-        if (isSelectedCell) {
-            painter.setPen(m_selectedTextColor);
-        } else if (isCurrentDay) {
-            painter.setPen(m_currentDayTextColor);
-        } else {
-            if (m_currentDate.month() == getCellDate(pos).month())
-                painter.setPen(m_defaultTextColor);
-            else
-                painter.setPen(m_notCurrentTextColor);
-        }
-
-        //    painter.drawRect(rect);
-        QRect test;
-        painter.setFont(m_dayNumFont);
-
-        painter.drawText(rect, Qt::AlignCenter, dayNum, &test);
-#else
-        // draw selected cell background circle
-        if (isSelectedCell) {
-            int hh = 0;
-            QRect fillRect;
-            if (cell->width() > cell->height()) {
-                hh = cell->height();
-                fillRect = QRect((cell->width() - hh) / 2.0 + 0.5 - 3, hh * 0.11 - 2, hh + 6, hh + 6);
-            } else {
-                hh = cell->width();
-                fillRect = QRect(-3, (cell->height() - hh) / 2.0 + hh * 0.11 - 2, hh + 6, hh + 6);
-            }
-            QPixmap pixmap;
-            if (m_themetype == 2)
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/darkchoose30X30_checked .svg");
-            else {
-                pixmap = DHiDPIHelper::loadNxPixmap(":/resources/icon/choose30X30_checked .svg");
-            }
-
-            pixmap.setDevicePixelRatio(devicePixelRatioF());
-            painter.save();
-            painter.setRenderHint(QPainter::Antialiasing);
-            painter.setRenderHint(QPainter::HighQualityAntialiasing);
-            painter.setRenderHint(QPainter::SmoothPixmapTransform);
-            painter.drawPixmap(fillRect, pixmap);
+            painter.setBrush(QBrush(m_highColor));
+            painter.setPen(Qt::NoPen);
+            painter.drawEllipse(fillRect);
             painter.restore();
         }
 
@@ -634,14 +563,13 @@ void CYearView::paintCell(QWidget *cell)
                 int r = cell->width() * (4 / 25);
                 if (r < 4) {
                     r = 4;
-                } else if ( r > 7) {
+                } else if (r > 7) {
                     r = 7;
                 }
                 painter.drawEllipse(cell->width() - r, 0, r, r);
                 painter.restore();
             }
         }
-#endif
     }
     painter.end();
 }

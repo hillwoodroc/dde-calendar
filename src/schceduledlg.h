@@ -25,7 +25,6 @@
 #include <DDialog>
 #include <DFrame>
 #include <DLineEdit>
-#include <DPushButton>
 #include <DTextEdit>
 #include <DTimeEdit>
 #include <QButtonGroup>
@@ -36,7 +35,6 @@
 #include <QRadioButton>
 #include <QTimeEdit>
 #include <QWidget>
-//#include <DDateEdit>
 #include <DComboBox>
 #include "schedulestructs.h"
 DWIDGET_USE_NAMESPACE
@@ -63,6 +61,8 @@ public slots:
     void slotallDayStateChanged(int state);
     void slotbRpeatactivated(int index);
     void sloteRpeatactivated(int index);
+    //对话框按钮点击处理
+    void slotBtClick(int buttonIndex, QString buttonName);
 
 protected:
 //     void focusInEvent(QFocusEvent *event);
@@ -99,12 +99,6 @@ private:
     DWidget *m_endrepeattimesWidget;
     DDateEdit *m_endRepeatDate = nullptr;
     DWidget *m_endrepeatWidget;
-    DPushButton *m_cancelBt = nullptr;
-    DPushButton *m_OkBt = nullptr;
-    // CCalendarTimeEidt                *m_bCalendarTimeEidt;
-    // CCalendarTimeEidt                *m_eCalendarTimeEidt;
-    // CCustomCalendarWidget            *m_bCustomDateW;
-    // CCustomCalendarWidget            *m_eCustomDateW;
     DFrame *m_gwi;
     QLabel *m_titleLabel;
 

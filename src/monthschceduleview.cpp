@@ -41,7 +41,8 @@
 
 DGUI_USE_NAMESPACE
 
-CMonthSchceduleWidgetItem::CMonthSchceduleWidgetItem( QWidget *parent /*= nullptr*/, int edittype): DPushButton(parent)
+CMonthSchceduleWidgetItem::CMonthSchceduleWidgetItem(QWidget *parent /*= nullptr*/, int edittype)
+    : DPushButton(parent)
 {
     m_editType = edittype;
     //setMargin(0);
@@ -53,9 +54,9 @@ CMonthSchceduleWidgetItem::CMonthSchceduleWidgetItem( QWidget *parent /*= nullpt
     connect(this, SIGNAL(pressed()), this, SLOT(slotPress()));
     setAttribute(Qt::WA_DeleteOnClose, true);
     const int duration = 200;
-    m_properAnimationFirst = new QPropertyAnimation( this, "setRectOffset", this);
+    m_properAnimationFirst = new QPropertyAnimation(this, "setRectOffset", this);
     m_properAnimationFirst->setObjectName("First");
-    m_properAnimationSecond = new QPropertyAnimation( this, "setRectOffset", this);
+    m_properAnimationSecond = new QPropertyAnimation(this, "setRectOffset", this);
     m_properAnimationSecond->setObjectName("Second");
     m_properAnimationFirst->setDuration(duration);
     m_properAnimationSecond->setDuration(duration);
@@ -76,7 +77,7 @@ CMonthSchceduleWidgetItem::~CMonthSchceduleWidgetItem()
     disconnect(m_deleteAction, SIGNAL(triggered(bool)), this, SLOT(slotDelete()));
 }
 
-void CMonthSchceduleWidgetItem::setColor( QColor color1, QColor color2, bool GradientFlag /*= false*/ )
+void CMonthSchceduleWidgetItem::setColor(QColor color1, QColor color2, bool GradientFlag /*= false*/)
 {
     m_color1 = color1;
     m_color2 = color2;
@@ -88,7 +89,7 @@ void CMonthSchceduleWidgetItem::setSizeType(DFontSizeManager::SizeType sizeType)
     m_SizeType = sizeType;
 }
 
-void CMonthSchceduleWidgetItem::setText( QColor tcolor, QFont font, QPoint pos)
+void CMonthSchceduleWidgetItem::setText(QColor tcolor, QFont font, QPoint pos)
 {
     m_textcolor = tcolor;
     m_font = font;
@@ -121,7 +122,7 @@ void CMonthSchceduleWidgetItem::setTransparentB(bool t)
     update();
 }
 
-void CMonthSchceduleWidgetItem::setData( ScheduleDtailInfo vScheduleInfo )
+void CMonthSchceduleWidgetItem::setData(ScheduleDtailInfo vScheduleInfo)
 {
     m_ScheduleInfo = vScheduleInfo;
     update();
@@ -129,7 +130,7 @@ void CMonthSchceduleWidgetItem::setData( ScheduleDtailInfo vScheduleInfo )
 
 void CMonthSchceduleWidgetItem::setRect(int x, int y, int w, int h)
 {
-    m_rect = QRect(x,y,w,h);
+    m_rect = QRect(x, y, w, h);
 }
 
 void CMonthSchceduleWidgetItem::setRectOffset(int offset)
@@ -138,7 +139,7 @@ void CMonthSchceduleWidgetItem::setRectOffset(int offset)
                , m_rect.y() - offset / 2
                , m_rect.width() + offset * 2
                , m_rect.height() + offset);
-    m_widthoffset = offset*2;
+    m_widthoffset = offset * 2;
     this->setGeometry(rect);
     this->setFixedSize(rect.width(), rect.height());
 }
@@ -188,24 +189,14 @@ void CMonthSchceduleWidgetItem::slotDelete()
 
         msgBox.setText(tr("You are deleting an event."));
         msgBox.setInformativeText(tr("Are you sure you want to delete this event?"));
-        DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-        DPushButton *yesButton = msgBox.addPushButton(tr("Delete"), 1);
-        msgBox.updatesize();
-        DPalette pa = yesButton->palette();
-        if (themetype == 0 || themetype == 1) {
-            pa.setColor(DPalette::ButtonText, Qt::red);
-
-        } else {
-            pa.setColor(DPalette::ButtonText, "#FF5736");
-
-        }
-        yesButton->setPalette(pa);
+        //设置按钮文字
+        msgBox.addPushButton(tr("Cancel"), true);
+        msgBox.addWaringButton(tr("Delete"), true);
         msgBox.exec();
-
-        if (msgBox.clickButton() == noButton) {
+        if (msgBox.clickButton() == 0) {
             emit signalViewtransparentFrame(0);
             return;
-        } else if (msgBox.clickButton() == yesButton) {
+        } else if (msgBox.clickButton() == 1) {
             CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->deleteScheduleInfoById(m_ScheduleInfo.id);
         }
     } else {
@@ -216,30 +207,19 @@ void CMonthSchceduleWidgetItem::slotDelete()
 
             msgBox.setText(tr("You are deleting an event."));
             msgBox.setInformativeText(tr("Do you want to delete all occurrences of this event, or only the selected occurrence?"));
-            DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-            DPushButton *yesallbutton = msgBox.addPushButton(tr("Delete All"));
-            DPushButton *yesButton = msgBox.addPushButton(tr("Delete Only This Event"));
-            msgBox.updatesize();
-            DPalette pa = yesButton->palette();
-            if (themetype == 0 || themetype == 1) {
-                pa.setColor(DPalette::ButtonText, Qt::white);
-                pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-                pa.setColor(DPalette::Light, QColor("#0098FF"));
-            } else {
-                pa.setColor(DPalette::ButtonText, "#B8D3FF");
-                pa.setColor(DPalette::Dark, QColor("#0056C1"));
-                pa.setColor(DPalette::Light, QColor("#004C9C"));
-            }
-            yesButton->setPalette(pa);
+            //设置按钮文字
+            msgBox.addPushButton(tr("Cancel"));
+            msgBox.addPushButton(tr("Delete All"));
+            msgBox.addWaringButton(tr("Delete Only This Event"));
             msgBox.exec();
+            //各个按钮功能
 
-            if (msgBox.clickButton() == noButton) {
+            if (msgBox.clickButton() == 0) {
                 emit signalViewtransparentFrame(0);
                 return;
-            } else if (msgBox.clickButton() == yesallbutton) {
+            } else if (msgBox.clickButton() == 1) {
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->deleteScheduleInfoById(m_ScheduleInfo.id);
-            } else if (msgBox.clickButton() == yesButton) {
-
+            } else if (msgBox.clickButton() == 2) {
                 ScheduleDtailInfo newschedule;
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_ScheduleInfo.id, newschedule);
                 newschedule.ignore.append(m_ScheduleInfo.beginDateTime);
@@ -251,35 +231,24 @@ void CMonthSchceduleWidgetItem::slotDelete()
             //msgBox.setIconPixmap(DHiDPIHelper::loadNxPixmap(":/resources/icon/dde-logo.svg").scaled(QSize(34, 34) * devicePixelRatioF()));
             msgBox.setText(tr("You are deleting an event."));
             msgBox.setInformativeText(tr("Do you want to delete this and all future occurrences of this event, or only the selected occurrence?"));
-            DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-            DPushButton *yesallbutton = msgBox.addPushButton(tr("Delete All Future Events"));
-            DPushButton *yesButton = msgBox.addPushButton(tr("Delete Only This Event"));
-            msgBox.updatesize();
-            DPalette pa = yesButton->palette();
-            if (themetype == 0 || themetype == 1) {
-                pa.setColor(DPalette::ButtonText, Qt::white);
-                pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-                pa.setColor(DPalette::Light, QColor("#0098FF"));
-            } else {
-                pa.setColor(DPalette::ButtonText, "#B8D3FF");
-                pa.setColor(DPalette::Dark, QColor("#0056C1"));
-                pa.setColor(DPalette::Light, QColor("#004C9C"));
-            }
-            yesButton->setPalette(pa);
+            //设置按钮文字
+            msgBox.addPushButton(tr("Cancel"));
+            msgBox.addPushButton(tr("Delete All Future Events"));
+            msgBox.addWaringButton(tr("Delete Only This Event"));
             msgBox.exec();
+            //各个按钮功能
 
-            if (msgBox.clickButton() == noButton) {
+            if (msgBox.clickButton() == 0) {
                 emit signalViewtransparentFrame(0);
                 return;
-            } else if (msgBox.clickButton() == yesallbutton) {
+            } else if (msgBox.clickButton() == 1) {
                 ScheduleDtailInfo newschedule;
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_ScheduleInfo.id, newschedule);
                 newschedule.enddata.type = 2;
                 newschedule.enddata.date = m_ScheduleInfo.beginDateTime.addDays(-1);
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->updateScheduleInfo(newschedule);
 
-            } else if (msgBox.clickButton() == yesButton) {
-
+            } else if (msgBox.clickButton() == 2) {
                 ScheduleDtailInfo newschedule;
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_ScheduleInfo.id, newschedule);
                 newschedule.ignore.append(m_ScheduleInfo.beginDateTime);
@@ -309,7 +278,7 @@ void CMonthSchceduleWidgetItem::animationFinished()
     isAnimation = false;
 }
 
-void CMonthSchceduleWidgetItem::paintEvent( QPaintEvent *e )
+void CMonthSchceduleWidgetItem::paintEvent(QPaintEvent *e)
 {
 //    QRect ur=e->rect();//得到组件尺寸
 //    QPixmap pix(this->size());//以此为参数创建一个位图变量
@@ -377,8 +346,8 @@ void CMonthSchceduleWidgetItem::paintEvent( QPaintEvent *e )
             tstr = tstr + "...";
         }
 
-        painter.drawText(QRect(m_pos.x(), 1, labelwidth - m_pos.x()-m_widthoffset,
-                               labelheight - m_pos.y() + 3 * avge ),
+        painter.drawText(QRect(m_pos.x(), 1, labelwidth - m_pos.x() - m_widthoffset,
+                               labelheight - m_pos.y() + 3 * avge),
                          Qt::AlignLeft | Qt::AlignVCenter, tstr);
 
         if (m_hoverflag && !m_selectflag) {
@@ -440,7 +409,7 @@ void CMonthSchceduleWidgetItem::paintEvent( QPaintEvent *e )
 //    painteritem.drawPixmap(this->rect(),pix);
 //    painteritem.end();
 }
-void CMonthSchceduleWidgetItem::contextMenuEvent( QContextMenuEvent *event )
+void CMonthSchceduleWidgetItem::contextMenuEvent(QContextMenuEvent *event)
 {
     emit signalPressScheduleShow(false);
     if (m_ScheduleInfo.type.ID == 4) {
@@ -535,14 +504,14 @@ CMonthSchceduleNumButton::~CMonthSchceduleNumButton()
 
 }
 
-void CMonthSchceduleNumButton::setColor( QColor color1, QColor color2, bool GradientFlag /*= false*/ )
+void CMonthSchceduleNumButton::setColor(QColor color1, QColor color2, bool GradientFlag /*= false*/)
 {
     m_color1 = color1;
     m_color2 = color2;
     m_GradientFlag = GradientFlag;
 }
 
-void CMonthSchceduleNumButton::setText( QColor tcolor, QFont font, QPoint pos)
+void CMonthSchceduleNumButton::setText(QColor tcolor, QFont font, QPoint pos)
 {
     m_textcolor = tcolor;
     m_font = font;
@@ -641,7 +610,9 @@ void CMonthSchceduleView::setTheMe(int type)
     updateData();
 }
 
-CMonthSchceduleView::CMonthSchceduleView(QWidget *parent) : QObject (parent), m_parernt(parent)
+CMonthSchceduleView::CMonthSchceduleView(QWidget *parent)
+    : QObject(parent)
+    , m_parernt(parent)
 {
     QShortcut *shortcut = new QShortcut(parent);
     shortcut->setKey(QKeySequence(QLatin1String("Delete")));
@@ -676,7 +647,7 @@ void CMonthSchceduleView::setData(QVector<ScheduleDateRangeInfo> &data, int curr
     updateData();
 }
 
-void CMonthSchceduleView::slotdeleteitem( CMonthSchceduleWidgetItem *item)
+void CMonthSchceduleView::slotdeleteitem(CMonthSchceduleWidgetItem *item)
 {
     emit signalsUpdateShcedule(item->getData().id);
 }
@@ -705,7 +676,7 @@ void CMonthSchceduleView::slotDeleteItem()
 void CMonthSchceduleView::slotUpdatehe(int h)
 {
     if (he != h) {
-        if (h < 22 ) {
+        if (h < 22) {
             m_cNum = ((m_height - m_topMagin - m_buttommagin) / 6.0 + 0.5  - 27) / 23;
         } else {
             he = h;
@@ -752,11 +723,11 @@ void CMonthSchceduleView::updateData()
 
     for (int i = 0 ; i < m_weekSchedule.size(); ++i) {
         m_weekSchedule[i]->clearItem();
-        m_weekSchedule[i]->setData(m_data,i*7,7);
-        m_weekSchedule[i]->setHeight(he,(m_height - m_topMagin - m_buttommagin) / 6.0-27);
+        m_weekSchedule[i]->setData(m_data, i * 7, 7);
+        m_weekSchedule[i]->setHeight(he, (m_height - m_topMagin - m_buttommagin) / 6.0 - 27);
         m_weekSchedule[i]->updateSchedule();
         QVector<QVector<MScheduleDateRangeInfo> > mSchedule = m_weekSchedule[i]->getMScheduleInfo();
-        updateDateShow(mSchedule,m_weekSchedule[i]->getScheduleShowItem());
+        updateDateShow(mSchedule, m_weekSchedule[i]->getScheduleShowItem());
     }
     return;
 }
@@ -786,9 +757,9 @@ void CMonthSchceduleView::updateDateShow(QVector<QVector<MScheduleDateRangeInfo>
     for (int i = 0; i < vCMDaySchedule.count(); i++) {
         for (int j = 0; j < vCMDaySchedule[i].count(); j++) {
             if (vCMDaySchedule[i].at(j).state) {
-                createScheduleNumWidget(vCMDaySchedule[i].at(j), i + 1,schudeleShowItem);
+                createScheduleNumWidget(vCMDaySchedule[i].at(j), i + 1, schudeleShowItem);
             } else {
-                createScheduleItemWidget(vCMDaySchedule[i].at(j), i + 1,schudeleShowItem);
+                createScheduleItemWidget(vCMDaySchedule[i].at(j), i + 1, schudeleShowItem);
             }
         }
     }
@@ -829,7 +800,7 @@ void CMonthSchceduleView::splitSchedule(MScheduleDateRangeInfo &old, QVector<MSc
     }
 }
 
-void CMonthSchceduleView::createScheduleItemWidget(MScheduleDateRangeInfo info, int cnum,QVector<DPushButton *> &schudeleShowItem)
+void CMonthSchceduleView::createScheduleItemWidget(MScheduleDateRangeInfo info, int cnum, QVector<DPushButton *> &schudeleShowItem)
 {
     ScheduleDtailInfo gd = info.tData;
     CSchedulesColor gdcolor = CScheduleDataManage::getScheduleDataManage()->getScheduleColorByType(gd.type.ID);
@@ -848,7 +819,7 @@ void CMonthSchceduleView::createScheduleItemWidget(MScheduleDateRangeInfo info, 
     gwi->setFixedSize(fw, fh);
     gwi->setText(gdcolor.textColor, font, QPoint(13, 3));
     gwi->move(pos);
-    gwi->setRect(pos.x(),pos.y(),fw,fh);
+    gwi->setRect(pos.x(), pos.y(), fw, fh);
     //if (m_currentMonth != info.bdate.month() && m_currentMonth != info.edate.month()) {
     // QColor TransparentC = "#000000";
     //TransparentC.setAlphaF(0.05);
@@ -865,12 +836,12 @@ void CMonthSchceduleView::createScheduleItemWidget(MScheduleDateRangeInfo info, 
     connect(gwi, &CMonthSchceduleWidgetItem::signalViewtransparentFrame, this, &CMonthSchceduleView::signalViewtransparentFrame);
     connect(gwi, &CMonthSchceduleWidgetItem::signalUpdateUI, this, &CMonthSchceduleView::signalUpdateUI);
     connect(gwi, &CMonthSchceduleWidgetItem::signalPressScheduleShow, this, &CMonthSchceduleView::signalPressScheduleShow);
-    connect(gwi,&CMonthSchceduleWidgetItem::signalupdatehe,this,&CMonthSchceduleView::slotUpdatehe);
+    connect(gwi, &CMonthSchceduleWidgetItem::signalupdatehe, this, &CMonthSchceduleView::slotUpdatehe);
 
     schudeleShowItem.append(gwi);
 }
 
-void CMonthSchceduleView::createScheduleNumWidget(MScheduleDateRangeInfo info, int cnum,QVector<DPushButton *> &schudeleShowItem)
+void CMonthSchceduleView::createScheduleNumWidget(MScheduleDateRangeInfo info, int cnum, QVector<DPushButton *> &schudeleShowItem)
 {
     int type = CScheduleDataManage::getScheduleDataManage()->getTheme();
     CMonthSchceduleNumButton *gwi = new CMonthSchceduleNumButton(m_parernt);
@@ -915,22 +886,20 @@ void CMonthSchceduleView::computePos(int cnum, QDate bgeindate, QDate enddate, Q
 {
     int brow = (m_beginDate.daysTo(bgeindate)) / 7;
 
-    int bcol = (m_beginDate.daysTo(bgeindate) ) % 7;
-    int ecol = (m_beginDate.daysTo(enddate) ) % 7;
+    int bcol = (m_beginDate.daysTo(bgeindate)) % 7;
+    int ecol = (m_beginDate.daysTo(enddate)) % 7;
 
-    fw = (ecol - bcol + 1) * ((m_width - m_leftMagin ) / 7.0) - 11;
+    fw = (ecol - bcol + 1) * ((m_width - m_leftMagin) / 7.0) - 11;
     fh = 22;
-    int x = m_leftMagin + bcol * ((m_width - m_leftMagin )  / 7.0) + 5;
+    int x = m_leftMagin + bcol * ((m_width - m_leftMagin) / 7.0) + 5;
     int y = m_topMagin + ((m_height - m_topMagin - m_buttommagin) * brow / 6.0 + 0.5)  + 27 + (cnum - 1) * fh + 2.9;
     pos = QPoint(x, y);
 }
 
-
-
 CWeekScheduleView::CWeekScheduleView(QObject *parent)
-    :QObject (parent),
-     m_ScheduleHeight(22),
-     m_DayHeight(47)
+    : QObject(parent)
+    , m_ScheduleHeight(22)
+    , m_DayHeight(47)
 {
     setMaxNum();
 }
@@ -942,10 +911,10 @@ CWeekScheduleView::~CWeekScheduleView()
 
 void CWeekScheduleView::setData(QVector<ScheduleDateRangeInfo> &data, const int position, const int count)
 {
-    int endPos = position+count;
-    Q_ASSERT(!(endPos>data.size()));
+    int endPos = position + count;
+    Q_ASSERT(!(endPos > data.size()));
     m_ScheduleInfo.clear();
-    for (int i = position; i<endPos; ++i) {
+    for (int i = position; i < endPos; ++i) {
         for (int j = 0 ; j < data.at(i).vData.size(); ++j) {
             if (!m_ScheduleInfo.contains(data.at(i).vData.at(j))) {
                 m_ScheduleInfo.append(data.at(i).vData.at(j));
@@ -953,7 +922,7 @@ void CWeekScheduleView::setData(QVector<ScheduleDateRangeInfo> &data, const int 
         }
     }
     beginDate  = data.at(position).date;
-    endDate = data.at(position+count -1).date;
+    endDate = data.at(position + count - 1).date;
     m_colum = count;
     updateSchedule();
 }
@@ -967,10 +936,10 @@ void CWeekScheduleView::setHeight(const int ScheduleHeight, const int DayHeigth)
 
 void CWeekScheduleView::updateSchedule()
 {
-    QDate   tbegindate,tenddate;
+    QDate tbegindate, tenddate;
     QVector<MScheduleDateRangeInfo> vMDaySchedule;
     m_ColumnScheduleCount.clear();
-    m_ColumnScheduleCount.fill(0,m_colum);
+    m_ColumnScheduleCount.fill(0, m_colum);
     for (int i = 0 ; i < m_ScheduleInfo.size(); ++i) {
         //日程时间重新标定
         tbegindate = m_ScheduleInfo.at(i).beginDateTime.date();
@@ -987,11 +956,11 @@ void CWeekScheduleView::updateSchedule()
         qint64 pos = beginDate.daysTo(info.bdate);
         qint64 count = info.bdate.daysTo(info.edate);
         int j = pos;
-        for (; j < (pos+ count+1); ++j) {
+        for (; j < (pos + count + 1); ++j) {
             ++m_ColumnScheduleCount[j];
         }
     }
-    qSort(vMDaySchedule.begin(),vMDaySchedule.end());
+    qSort(vMDaySchedule.begin(), vMDaySchedule.end());
     sortAndFilter(vMDaySchedule);
 }
 
@@ -1006,7 +975,7 @@ void CWeekScheduleView::clearItem()
 
 void CWeekScheduleView::setMaxNum()
 {
-    m_MaxNum = m_DayHeight/(m_ScheduleHeight+1);
+    m_MaxNum = m_DayHeight / (m_ScheduleHeight + 1);
 }
 
 void CWeekScheduleView::mScheduleClear()
@@ -1021,8 +990,8 @@ void CWeekScheduleView::sortAndFilter(QVector<MScheduleDateRangeInfo> &vMDaySche
 {
     QVector<QVector<bool> > scheduleFill;
     QVector<bool> scheduf;
-    scheduf.fill(false,m_colum);
-    scheduleFill.fill(scheduf,m_MaxNum);
+    scheduf.fill(false, m_colum);
+    scheduleFill.fill(scheduf, m_MaxNum);
     int postion = 0;
     int end = 0;
     mScheduleClear();
@@ -1034,26 +1003,26 @@ void CWeekScheduleView::sortAndFilter(QVector<MScheduleDateRangeInfo> &vMDaySche
         int pos = postion;
         int count = 0;
         int scheduleRow = row;
-        for (; postion<end+1; ++postion) {
+        for (; postion < end + 1; ++postion) {
             if (row == m_MaxNum) {
-                if (m_ColumnScheduleCount[postion] >m_MaxNum) {
+                if (m_ColumnScheduleCount[postion] > m_MaxNum) {
                     continue;
                 }
-                row =0;
+                row = 0;
                 pos = postion;
             }
-            while (row<m_MaxNum) {
-                if (m_MScheduleInfo.size()<(row+1)) {
+            while (row < m_MaxNum) {
+                if (m_MScheduleInfo.size() < (row + 1)) {
                     RowScheduleInfo ms;
                     m_MScheduleInfo.append(ms);
                 }
                 if (!scheduleFill[row][postion]) {
-                    if ((m_ColumnScheduleCount[postion]>m_MaxNum) &&(row>=m_MaxNum-1)) {
+                    if ((m_ColumnScheduleCount[postion] > m_MaxNum) && (row >= m_MaxNum - 1)) {
                         scheduleFill[row][postion] = true;
-                        if (pos !=postion) {
+                        if (pos != postion) {
                             MScheduleDateRangeInfo scheduleInfo;
                             scheduleInfo.bdate = beginDate.addDays(pos);
-                            scheduleInfo.edate = beginDate.addDays(postion -1);
+                            scheduleInfo.edate = beginDate.addDays(postion - 1);
                             scheduleInfo.state = false;
                             scheduleInfo.tData = vMDaySchedule.at(i).tData;
                             m_MScheduleInfo[row].append(scheduleInfo);
@@ -1062,14 +1031,14 @@ void CWeekScheduleView::sortAndFilter(QVector<MScheduleDateRangeInfo> &vMDaySche
                         MScheduleDateRangeInfo info;
                         info.bdate = beginDate.addDays(postion);
                         info.edate = info.bdate;
-                        info.num = m_ColumnScheduleCount[postion] -m_MaxNum +1;
+                        info.num = m_ColumnScheduleCount[postion] - m_MaxNum + 1;
                         info.state = true;
                         m_MScheduleInfo[row].append(info);
 
-                        pos = postion +1;
-                        if (pos<7 && pos <end +1) {
-                            if (m_ColumnScheduleCount[pos]<row+1) {
-                                row =m_ColumnScheduleCount[pos]-1;
+                        pos = postion + 1;
+                        if (pos < 7 && pos < end + 1) {
+                            if (m_ColumnScheduleCount[pos] < row + 1) {
+                                row = m_ColumnScheduleCount[pos] - 1;
                             }
                         } else {
                             row = 0;
@@ -1086,12 +1055,11 @@ void CWeekScheduleView::sortAndFilter(QVector<MScheduleDateRangeInfo> &vMDaySche
                 }
             }
         }
-        if (pos>6||count==0) {
-
+        if (pos > 6 || count == 0) {
         } else {
             MScheduleDateRangeInfo scheduleInfo;
             scheduleInfo.bdate = beginDate.addDays(pos);
-            scheduleInfo.edate = beginDate.addDays(postion -1);
+            scheduleInfo.edate = beginDate.addDays(postion - 1);
             scheduleInfo.state = false;
             scheduleInfo.tData = vMDaySchedule.at(i).tData;
             m_MScheduleInfo[scheduleRow].append(scheduleInfo);

@@ -48,6 +48,8 @@ public slots:
     void slotDeleteBt();
     //显示对话框
     int exec() Q_DECL_OVERRIDE;
+    //按钮点击事件
+    void slotBtClick(int buttonIndex, QString buttonName);
 
 private:
     void initUI();
@@ -63,9 +65,6 @@ protected:
 private:
     QLabel                           *m_schceduleLabel = nullptr;
     QLabel                           *m_timeLabel = nullptr;
-    DPushButton                      *m_editBt = nullptr;
-    DPushButton                      *m_deleteBt = nullptr;
-    DPushButton                      *m_okBt = nullptr;
     QLabel                           *m_icon;
     QLabel                           *m_Title;
     ScheduleDtailInfo                     m_scheduleInfo;//日程

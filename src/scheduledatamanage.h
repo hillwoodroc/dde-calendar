@@ -55,8 +55,7 @@ public:
     CScheduleDataCtrl *getscheduleDataCtrl();
     CHuangliDayDataManage *getHuangliDayDataManage();
     CSchedulesColor getScheduleColorByType(int type);
-
-
+    QColor getSystemActiveColor();
     void setSearchResult(QVector<ScheduleDateRangeInfo> &vData);
     bool getSearchResult(ScheduleDtailInfo info);//true 高亮
     bool getSearchResult(QDate date);//true 高亮

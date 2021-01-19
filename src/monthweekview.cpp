@@ -18,12 +18,11 @@
  */
 
 #include "monthweekview.h"
+#include "scheduledatamanage.h"
 
 #include <QLabel>
 #include <QDebug>
 #include <QDate>
-#include <DPalette>
-#include <DApplicationHelper>
 #include <DPalette>
 DGUI_USE_NAMESPACE
 CMonthWeekView::CMonthWeekView(QWidget *parent) : DWidget(parent)
@@ -62,27 +61,17 @@ void CMonthWeekView::setList(int weekday)
         weekfont.setWeight(QFont::Medium);
         weekfont.setPixelSize(16);
         label->setTextFont(weekfont);
+        //设置周末的文字颜色
+        QColor colorSeven = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
         if (d == 7) {
             QColor textbC(0, 66, 154);
-            label->setTextColor("#0887FF");
+            label->setTextColor(colorSeven);
             label->setBColor(textbC);
             label->setRoundState(true, false, false, false);
             m_weekData.append(qMakePair(label, 1));
-#if 0
-            DPalette monthpa = label->palette();
-            QColor textC = "#0887FF";
-            QColor textbC(0, 66, 154);
-            textbC.setAlphaF(0.05);
-            monthpa.setColor(DPalette::WindowText, textC);
-            monthpa.setColor(DPalette::Background, textbC);
-            label->setAutoFillBackground(true);
-            label->setPalette(monthpa);
-            m_weekData.append(qMakePair(label, 1));
-            //label->setStyleSheet("color:#0887FF;background: rgba(0,66,154,0.05);");
-#endif
         } else if (d == 6) {
             QColor textbC(0, 66, 154);
-            label->setTextColor("#0887FF");
+            label->setTextColor(colorSeven);
             label->setBColor(textbC);
             label->setRoundState(false, true, false, false);
             m_weekData.append(qMakePair(label, 1));
@@ -124,10 +113,15 @@ void CMonthWeekView::setTheMe(int type)
     if (type == 0 || type == 1) {
         for (int i = 0; i < m_weekData.count(); i++) {
             if (m_weekData.at(i).second == 1) {
-                QColor textC = "#0887FF";
+                //获取系统活动色
+                QColor color = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
+                //背景色
                 QColor textbC("#75C18E");
+                //透明度
                 textbC.setAlphaF(0.1);
-                m_weekData.at(i).first->setTextColor(textC);
+                //设置文字颜色
+                m_weekData.at(i).first->setTextColor(color);
+                //设置背景色
                 m_weekData.at(i).first->setBColor(textbC);
             } else {
                 QColor textC = "#6F6F6F";

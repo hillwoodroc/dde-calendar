@@ -247,24 +247,16 @@ void CMySchceduleView::slotDeleteBt()
         // msgBox.setIconPixmap(DHiDPIHelper::loadNxPixmap(":/resources/icon/dde-logo.svg").scaled(QSize(34, 34) * devicePixelRatioF()));
         msgBox.setText(tr("You are deleting an event."));
         msgBox.setInformativeText(tr("Are you sure you want to delete this event?"));
-        DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-        DPushButton *yesButton = msgBox.addPushButton(tr("Delete"), 1);
-        DPalette pa = yesButton->palette();
 
-        if (themetype == 0 || themetype == 1) {
-            pa.setColor(DPalette::ButtonText, Qt::red);
-
-        } else {
-            pa.setColor(DPalette::ButtonText, "#FF5736");
-
-        }
-        yesButton->setPalette(pa);
-        msgBox.updatesize();
+        msgBox.addPushButton(tr("Cancel"), true);
+        msgBox.addWaringButton(tr("Delete"), true);
         msgBox.exec();
-
-        if (msgBox.clickButton() == noButton) {
+        //是否删除
+        if (msgBox.clickButton() == 0) {
+            //取消
             return;
-        } else if (msgBox.clickButton() == yesButton) {
+        } else if (msgBox.clickButton() == 1) {
+            //删除
             CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->deleteScheduleInfoById(m_scheduleInfo.id);
         } else {
             return;
@@ -277,32 +269,26 @@ void CMySchceduleView::slotDeleteBt()
 
             msgBox.setText(tr("You are deleting an event."));
             msgBox.setInformativeText(tr("Do you want to delete all occurrences of this event, or only the selected occurrence?"));
-            DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-            DPushButton *yesallbutton = msgBox.addPushButton(tr("Delete All"));
-            DPushButton *yesButton = msgBox.addPushButton(tr("Delete Only This Event"));
-            msgBox.updatesize();
-            DPalette pa = yesButton->palette();
-            if (themetype == 0 || themetype == 1) {
-                pa.setColor(DPalette::ButtonText, Qt::white);
-                pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-                pa.setColor(DPalette::Light, QColor("#0098FF"));
-            } else {
-                pa.setColor(DPalette::ButtonText, "#B8D3FF");
-                pa.setColor(DPalette::Dark, QColor("#0056C1"));
-                pa.setColor(DPalette::Light, QColor("#004C9C"));
-            }
-            yesButton->setPalette(pa);
+            //设置按钮文字
+            msgBox.addPushButton(tr("Cancel"));
+            msgBox.addPushButton(tr("Delete All"));
+            msgBox.addWaringButton(tr("Delete Only This Event"));
             msgBox.exec();
-
-            if (msgBox.clickButton() == noButton) {
+            //各个按钮功能
+            if (msgBox.clickButton() == 0) {
+                //取消
                 return;
-            } else if (msgBox.clickButton() == yesallbutton) {
+            } else if (msgBox.clickButton() == 1) {
+                //删除所有
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->deleteScheduleInfoById(m_scheduleInfo.id);
-            } else if (msgBox.clickButton() == yesButton) {
-
+            } else if (msgBox.clickButton() == 2) {
+                //仅删除这个日程
                 ScheduleDtailInfo newschedule;
+                //根据id查找点击日程
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_scheduleInfo.id, newschedule);
+                //忽略需要删除的日程
                 newschedule.ignore.append(m_scheduleInfo.beginDateTime);
+                //更新日程信息
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->updateScheduleInfo(newschedule);
             } else {
                 return;
@@ -313,39 +299,34 @@ void CMySchceduleView::slotDeleteBt()
             //msgBox.setIconPixmap(DHiDPIHelper::loadNxPixmap(":/resources/icon/dde-logo.svg").scaled(QSize(34, 34) * devicePixelRatioF()));
             msgBox.setText(tr("You are deleting an event."));
             msgBox.setInformativeText(tr("Do you want to delete this and all future occurrences of this event, or only the selected occurrence?"));
-            DPushButton *noButton = msgBox.addPushButton(tr("Cancel"));
-            DPushButton *yesallbutton = msgBox.addPushButton(tr("Delete All Future Events"));
-            DPushButton *yesButton = msgBox.addPushButton(tr("Delete Only This Event"));
-            msgBox.updatesize();
-            DPalette pa = yesButton->palette();
-            if (themetype == 0 || themetype == 1) {
-                pa.setColor(DPalette::ButtonText, Qt::white);
-                pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-                pa.setColor(DPalette::Light, QColor("#0098FF"));
-            } else {
-                pa.setColor(DPalette::ButtonText, "#B8D3FF");
-                pa.setColor(DPalette::Dark, QColor("#0056C1"));
-                pa.setColor(DPalette::Light, QColor("#004C9C"));
-            }
-            yesButton->setPalette(pa);
+            //设置按钮文字
+            msgBox.addPushButton(tr("Cancel"));
+            msgBox.addPushButton(tr("Delete All Future Events"));
+            msgBox.addWaringButton(tr("Delete Only This Event"));
             msgBox.exec();
-
-            if (msgBox.clickButton() == noButton) {
+            //各个按钮功能
+            if (msgBox.clickButton() == 0) {
+                //取消
                 return;
-            } else if (msgBox.clickButton() == yesallbutton) {
+            } else if (msgBox.clickButton() == 1) {
+                //删除未来所有
                 ScheduleDtailInfo newschedule;
+                //根据id查找点击的日程
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_scheduleInfo.id, newschedule);
-
+                //设置日程结束重复于的类型
                 newschedule.enddata.type = 2;
+                //设置重复日程结束日期
                 newschedule.enddata.date = m_scheduleInfo.beginDateTime.addDays(-1);
+                //更新日程信息
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->updateScheduleInfo(newschedule);
-
-            } else if (msgBox.clickButton() == yesButton) {
-
+            } else if (msgBox.clickButton() == 2) {
+                //仅删除这个日程
                 ScheduleDtailInfo newschedule;
+                //根据id查找点击的日程
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->getScheduleInfoById(m_scheduleInfo.id, newschedule);
-
+                //忽略这个日程
                 newschedule.ignore.append(m_scheduleInfo.beginDateTime);
+                //更新日程信息
                 CScheduleDataManage::getScheduleDataManage()->getscheduleDataCtrl()->updateScheduleInfo(newschedule);
             } else {
                 return;
@@ -365,6 +346,26 @@ int CMySchceduleView::exec()
     //移动窗口
     moveCentorShow();
     return DDialog::exec();
+}
+
+/**
+ * @brief CMyScheduleView::slotBtClick      按钮点击事件
+ * @param buttonIndex
+ * @param buttonName
+ */
+void CMySchceduleView::slotBtClick(int buttonIndex, QString buttonName)
+{
+    Q_UNUSED(buttonName);
+    if (buttonIndex == 0) {
+        //删除日程
+        slotDeleteBt();
+        return;
+    }
+    if (buttonIndex == 1) {
+        //编辑日程
+        slotEditBt();
+        return;
+    }
 }
 
 void CMySchceduleView::initUI()
@@ -429,27 +430,6 @@ void CMySchceduleView::initUI()
 
     area->setWidget(w);
     mainLayout->addWidget(area);
-
-//    m_schceduleLabel = new QLabel(this);
-//    m_schceduleLabel->setWordWrap(true);
-//    m_schceduleLabel->setFixedWidth(340);
-//    m_schceduleLabel->setAlignment(Qt::AlignCenter);
-//    DFontSizeManager::instance()->bind(m_schceduleLabel,DFontSizeManager::T6);
-//    QFont labelF;
-//    labelF.setFamily("SourceHanSansSC");
-//    labelF.setWeight(QFont::Medium);
-//    DPalette wpa = m_schceduleLabel->palette();
-//    if (themetype == 0 || themetype == 1) {
-//        wpa.setColor(DPalette::WindowText, QColor("#2C4767"));
-
-//    } else {
-//        wpa.setColor(DPalette::WindowText, QColor("#A8B7D1"));
-//    }
-//    m_schceduleLabel->setPalette(wpa);
-//    m_schceduleLabel->setFont(labelF);
-//    mainLayout->addWidget(m_schceduleLabel);
-
-
     m_timeLabel = new QLabel(this);
     m_timeLabel->setFixedHeight(26);
     m_timeLabel->setAlignment(Qt::AlignCenter);
@@ -475,47 +455,16 @@ void CMySchceduleView::initUI()
     mainLayout->addWidget(m_timeLabel);
 
     if (m_scheduleInfo.type.ID == 4) {
-        QHBoxLayout *h = new QHBoxLayout();
-        m_okBt = new DPushButton(tr("OK"));
-        m_okBt->setFocusPolicy(Qt::NoFocus);
-        m_okBt->setFixedSize(360, 36);
-        connect(m_okBt, &DPushButton::clicked, this, &CMySchceduleView::close);
-        mainLayout->addSpacing(20);
-        h->addStretch();
-        h->addWidget(m_okBt);
-        h->addStretch();
-        mainLayout->addLayout(h);
+        addButton(tr("OK"), false, DDialog::ButtonNormal);
+        QAbstractButton *button_ok = getButton(0);
+        button_ok->setFixedSize(360, 36);
     } else {
-        DVerticalLine *btframe = new DVerticalLine(this);
-        btframe->setFixedSize(3, 28);
-        QHBoxLayout *hBtLayout = new QHBoxLayout;
-        hBtLayout->setMargin(0);
-        hBtLayout->setSpacing(0);
-        hBtLayout->setContentsMargins(0, 0, 0, 0);
-        // hBtLayout->addStretch();
-        m_editBt = new DPushButton(tr("Edit"));
-        DPalette pa = m_editBt->palette();
-        if (themetype == 0 || themetype == 1) {
-            pa.setColor(DPalette::ButtonText, Qt::white);
-            pa.setColor(DPalette::Dark, QColor("#25B7FF"));
-            pa.setColor(DPalette::Light, QColor("#0098FF"));
-        } else {
-            pa.setColor(DPalette::ButtonText, "#B8D3FF");
-            pa.setColor(DPalette::Dark, QColor("#0056C1"));
-            pa.setColor(DPalette::Light, QColor("#004C9C"));
+        addButton(tr("Delete"), false, DDialog::ButtonNormal);
+        addButton(tr("Edit"), false, DDialog::ButtonRecommend);
+        for (int i = 0; i < buttonCount(); i++) {
+            QAbstractButton *button = getButton(i);
+            button->setFixedSize(165, 36);
         }
-        m_editBt->setPalette(pa);
-        m_editBt->setFixedSize(165, 36);
-        m_deleteBt = new DPushButton(tr("Delete"));
-        m_deleteBt->setFixedSize(165, 36);
-
-        hBtLayout->addWidget(m_deleteBt);
-        hBtLayout->addSpacing(5);
-        hBtLayout->addWidget(btframe);
-        hBtLayout->addSpacing(5);
-        hBtLayout->addWidget(m_editBt);
-        mainLayout->addSpacing(20);
-        mainLayout->addLayout(hBtLayout);
     }
     DFrame *gwi = new DFrame(this);
     gwi->setContentsMargins(0, 0, 0, 0);
@@ -534,10 +483,9 @@ void CMySchceduleView::initUI()
 void CMySchceduleView::initConnection()
 {
     if (m_scheduleInfo.type.ID == 4) {
-
+        connect(this, &DDialog::buttonClicked, this, &CMySchceduleView::close);
     } else {
-        connect(m_editBt, &DPushButton::clicked, this, &CMySchceduleView::slotEditBt);
-        connect(m_deleteBt, &DPushButton::clicked, this, &CMySchceduleView::slotDeleteBt);
+        connect(this, &DDialog::buttonClicked, this, &CMySchceduleView::slotBtClick);
     }
 
     QShortcut *shortcut = new QShortcut(this);

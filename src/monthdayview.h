@@ -65,6 +65,8 @@ private:
     int m_realwidth = 100;
     bool m_searchfalg = false;
     int                      m_radius = 8;
+    //选择的颜色
+    QColor m_selectColor;
 };
 
 #endif // MONTDAYVIEW_H

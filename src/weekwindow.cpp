@@ -27,12 +27,14 @@
 #include <QHBoxLayout>
 #include <DPalette>
 #include <DHiDPIHelper>
-#include <QMouseEvent> 
+#include <QMouseEvent>
 #include "schcedulesearchview.h"
 #include "todybutton.h"
+#include "scheduledatamanage.h"
 
 DGUI_USE_NAMESPACE
-CWeekWindow::CWeekWindow(QWidget *parent): QMainWindow (parent)
+CWeekWindow::CWeekWindow(QWidget *parent)
+    : QMainWindow(parent)
 {
     setContentsMargins(0, 0, 0, 0);
     initUI();
@@ -85,19 +87,11 @@ void CWeekWindow::initUI()
     m_today = new CTodyButton;
     m_today->setText(QCoreApplication::translate("today", "Today", "Today"));
     m_today->setFixedSize(DDEWeekCalendar::WTodayWindth, DDEWeekCalendar::WTodayHeight);
-    DPalette todaypa = m_today->palette();
-    todaypa.setColor(DPalette::ButtonText, QColor("#0098FF"));
-    todaypa.setColor(DPalette::Dark, Qt::white);
-    todaypa.setColor(DPalette::Light, Qt::white);
-    QColor sbcolor("#002A57");
-    sbcolor.setAlphaF(0.05);
-    todaypa.setColor(DPalette::Shadow, sbcolor);
     QFont todayfont;
     todayfont.setFamily("SourceHanSansSC");
     todayfont.setWeight(QFont::Medium);
     todayfont.setPixelSize(14);
     m_today->setFont(todayfont);
-    m_today->setPalette(todaypa);
     m_prevButton = new DIconButton(DStyle::SP_ArrowLeft, this);
     //m_prevButton->setIconSize(QSize(36, 36));
     //m_prevButton->setIcon(QIcon(DHiDPIHelper::loadNxPixmap(":/resources/icon/previous_normal.svg")));
@@ -263,6 +257,7 @@ void CWeekWindow::initConnection()
 
 void CWeekWindow::setTheMe(int type)
 {
+    QColor todayColor = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
     if (type == 0 || type == 1) {
         DPalette anipa = m_contentBackground->palette();
         anipa.setColor(DPalette::Background, "#F8F8F8");
@@ -270,7 +265,7 @@ void CWeekWindow::setTheMe(int type)
         m_contentBackground->setBackgroundRole(DPalette::Background);
 
         DPalette todaypa = m_today->palette();
-        todaypa.setColor(DPalette::ButtonText, QColor("#1D81EC"));
+        todaypa.setColor(DPalette::ButtonText, todayColor);
         todaypa.setColor(DPalette::Dark, Qt::white);
         todaypa.setColor(DPalette::Light, Qt::white);
         QColor sbcolor("#002A57");
@@ -282,7 +277,7 @@ void CWeekWindow::setTheMe(int type)
         QColor todaypress = "#000000";
         todaypress.setAlphaF(0.2);
         m_today->setBColor("#FFFFFF", todayhover, todaypress, "#FFFFFF", todayhover, todaypress);
-        m_today->setTColor("#1D81EC", "#001A2E", "#0081FF");
+        m_today->setTColor(todayColor, "#001A2E", "#0081FF");
         m_today->setshadowColor(sbcolor);
 
         DPalette prevpa = m_prevButton->palette();
@@ -315,7 +310,7 @@ void CWeekWindow::setTheMe(int type)
         m_contentBackground->setBackgroundRole(DPalette::Background);
 
         DPalette todaypa = m_today->palette();
-        todaypa.setColor(DPalette::ButtonText, QColor("#0081FF"));
+        todaypa.setColor(DPalette::ButtonText, todayColor);
         todaypa.setColor(DPalette::Dark, "#414141");
         todaypa.setColor(DPalette::Light, "#484848");
         QColor sbcolor("#000000");
@@ -323,7 +318,7 @@ void CWeekWindow::setTheMe(int type)
         todaypa.setColor(DPalette::Shadow, sbcolor);
         m_today->setPalette(todaypa);
         m_today->setBColor("#484848", "#727272", "#242424", "#414141", "#535353", "#282828");
-        m_today->setTColor("#0081FF", "#FFFFFF", "#0081FF");
+        m_today->setTColor(todayColor, "#FFFFFF", "#0081FF");
         m_today->setshadowColor(sbcolor);
 
         DPalette prevpa = m_prevButton->palette();

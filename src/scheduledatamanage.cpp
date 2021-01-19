@@ -20,6 +20,11 @@
 
 #include "schedulesdbus.h"
 #include "calendardbus.h"
+
+#include <DGuiApplicationHelper>
+
+DGUI_USE_NAMESPACE
+
 CScheduleDataManage *CScheduleDataManage::m_vscheduleDataManage = new CScheduleDataManage;
 CScheduleDataCtrl *CScheduleDataManage::getscheduleDataCtrl()
 {
@@ -42,6 +47,11 @@ CSchedulesColor CScheduleDataManage::getScheduleColorByType(int type)
         }
     }
     return color;
+}
+
+QColor CScheduleDataManage::getSystemActiveColor()
+{
+    return DGuiApplicationHelper::instance()->applicationPalette().highlight().color();
 }
 
 void CScheduleDataManage::setSearchResult(QVector<ScheduleDateRangeInfo> &vData)
@@ -387,7 +397,7 @@ void CScheduleDataManage::clear()
     delete m_scheduleDataCtrl;
 }
 
-CScheduleDataManage::CScheduleDataManage ()
+CScheduleDataManage::CScheduleDataManage()
 {
     m_scheduleDataCtrl = new CScheduleDataCtrl;
     m_HuangliDayDataManage = new CHuangliDayDataManage;
