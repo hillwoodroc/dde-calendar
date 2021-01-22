@@ -59,7 +59,6 @@ private:
 
 protected:
     void changeEvent(QEvent *event) override;
-    bool eventFilter(QObject *obj, QEvent *pEvent) override;
 private slots:
     void buttonJudge(int id);
 private:

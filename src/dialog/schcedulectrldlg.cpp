@@ -159,11 +159,6 @@ void CSchceduleCtrlDlg::changeEvent(QEvent *event)
     setFixedHeight(36 + 48 + height_firstLabel + height_seconLabel + 30);
 }
 
-bool CSchceduleCtrlDlg::eventFilter(QObject *obj, QEvent *pEvent)
-{
-    return QDialog::eventFilter(obj, pEvent);
-}
-
 void CSchceduleCtrlDlg::buttonJudge(int id)
 {
     m_id = id;
