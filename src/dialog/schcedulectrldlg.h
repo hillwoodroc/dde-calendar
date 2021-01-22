@@ -55,9 +55,11 @@ private:
      * @param widget    需要设置的widget
      * @param textColor     显示颜色
      */
-    void setPaletteTextColor(QWidget *widget,QColor textColor);
+    void setPaletteTextColor(QWidget *widget, QColor textColor);
+
 protected:
     void changeEvent(QEvent *event) override;
+    bool eventFilter(QObject *obj, QEvent *pEvent) override;
 private slots:
     void buttonJudge(int id);
 private:

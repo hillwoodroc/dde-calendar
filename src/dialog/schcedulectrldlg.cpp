@@ -64,7 +64,7 @@ void CSchceduleCtrlDlg::initUI()
     m_firstLabel->setFixedWidth(350);
     m_firstLabel->setWordWrap(true);
     labelF.setWeight(QFont::Medium);
-    DFontSizeManager::instance()->bind(m_firstLabel,DFontSizeManager::T6);
+    DFontSizeManager::instance()->bind(m_firstLabel, DFontSizeManager::T6);
     m_firstLabel->setForegroundRole(DPalette::WindowText);
     m_firstLabel->setFont(labelF);
     m_mainBoxLayout->addWidget(m_firstLabel);
@@ -73,7 +73,7 @@ void CSchceduleCtrlDlg::initUI()
     m_seconLabel->setFixedWidth(350);
     m_seconLabel->setAlignment(Qt::AlignCenter);
     labelTitle.setWeight(QFont::Bold);
-    DFontSizeManager::instance()->bind(m_seconLabel,DFontSizeManager::T6);
+    DFontSizeManager::instance()->bind(m_seconLabel, DFontSizeManager::T6);
     m_seconLabel->setForegroundRole(DPalette::WindowText);
     //设置字重
     labelT.setWeight(QFont::Normal);
@@ -120,18 +120,18 @@ void CSchceduleCtrlDlg::setTheMe(const int type)
         contentColor = "#000000";
         contentColor.setAlphaF(0.7);
     }
-    setPaletteTextColor(m_firstLabel,titleColor);
-    setPaletteTextColor(m_seconLabel,contentColor);
+    setPaletteTextColor(m_firstLabel, titleColor);
+    setPaletteTextColor(m_seconLabel, contentColor);
 }
 
 void CSchceduleCtrlDlg::setPaletteTextColor(QWidget *widget, QColor textColor)
 {
     //如果为空指针则退出
-    if(nullptr == widget)
+    if (nullptr == widget)
         return;
     DPalette palette = widget->palette();
     //设置文字显示颜色
-    palette.setColor(DPalette::WindowText,textColor);
+    palette.setColor(DPalette::WindowText, textColor);
     widget->setPalette(palette);
 }
 
@@ -157,6 +157,11 @@ void CSchceduleCtrlDlg::changeEvent(QEvent *event)
         }
     }
     setFixedHeight(36 + 48 + height_firstLabel + height_seconLabel + 30);
+}
+
+bool CSchceduleCtrlDlg::eventFilter(QObject *obj, QEvent *pEvent)
+{
+    return QDialog::eventFilter(obj, pEvent);
 }
 
 void CSchceduleCtrlDlg::buttonJudge(int id)
@@ -187,7 +192,7 @@ QAbstractButton *CSchceduleCtrlDlg::addPushButton(QString btName, bool type)
 
 QAbstractButton *CSchceduleCtrlDlg::addsuggestButton(QString btName, bool type)
 {
-    addButton(btName,false,DDialog::ButtonRecommend);
+    addButton(btName, false, DDialog::ButtonRecommend);
     int button_index = getButtonIndexByText(btName);
     QAbstractButton *suggestButton = getButton(button_index);
 
@@ -207,7 +212,7 @@ QAbstractButton *CSchceduleCtrlDlg::addsuggestButton(QString btName, bool type)
 
 QAbstractButton *CSchceduleCtrlDlg::addWaringButton(QString btName, bool type)
 {
-    addButton(btName,false,DDialog::ButtonWarning);
+    addButton(btName, false, DDialog::ButtonWarning);
     int button_index = getButtonIndexByText(btName);
     QAbstractButton *suggestButton = getButton(button_index);
 
