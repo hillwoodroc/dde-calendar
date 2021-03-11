@@ -110,17 +110,17 @@ void CMonthWeekView::setList(int weekday)
 
 void CMonthWeekView::setTheMe(int type)
 {
+    //获取系统活动色,周末的文字颜色跟随系统活动色
+    QColor SystemActiveColor = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
     if (type == 0 || type == 1) {
         for (int i = 0; i < m_weekData.count(); i++) {
             if (m_weekData.at(i).second == 1) {
-                //获取系统活动色
-                QColor color = CScheduleDataManage::getScheduleDataManage()->getSystemActiveColor();
                 //背景色
                 QColor textbC("#75C18E");
                 //透明度
                 textbC.setAlphaF(0.1);
                 //设置文字颜色
-                m_weekData.at(i).first->setTextColor(color);
+                m_weekData.at(i).first->setTextColor(SystemActiveColor);
                 //设置背景色
                 m_weekData.at(i).first->setBColor(textbC);
             } else {
@@ -136,10 +136,9 @@ void CMonthWeekView::setTheMe(int type)
     } else if (type == 2) {
         for (int i = 0; i < m_weekData.count(); i++) {
             if (m_weekData.at(i).second == 1) {
-                QColor textC = "#0887FF";
                 QColor textbC = "#82AEC1";
                 textbC.setAlphaF(0.10);
-                m_weekData.at(i).first->setTextColor(textC);
+                m_weekData.at(i).first->setTextColor(SystemActiveColor);
                 m_weekData.at(i).first->setBColor(textbC);
             } else {
                 QColor textC = "#C0C6D4";
