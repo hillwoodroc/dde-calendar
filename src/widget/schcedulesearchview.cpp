@@ -37,6 +37,8 @@
 #include <QHBoxLayout>
 #include <QStylePainter>
 #include <QRect>
+#include <QPainterPath>
+#include <QMouseEvent>
 
 DGUI_USE_NAMESPACE
 CSchceduleSearchItem::CSchceduleSearchItem(QWidget *parent)

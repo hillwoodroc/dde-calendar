@@ -4,6 +4,8 @@
 
 #include "../globaldef.h"
 
+#include <QMouseEvent>
+
 scheduleitemwidget::scheduleitemwidget(QWidget *parent)
     : DWidget(parent)
 {

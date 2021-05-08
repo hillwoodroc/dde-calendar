@@ -1,3 +1,12 @@
+dde-calendar (5.7.0.27-1) stable; urgency=medium
+
+  * 修复月视图年份切换月份不变无法更新班休信息
+  * 修复拖拽修改跨天日程为单天日程时，结束时间早于开始时间被成功修改
+  * 修复桌面智能助手修改全天日程的内容后，日程展示为非全天的日程
+  * 修复日视图下新建/编辑日程窗口页面，输入xx:03后直接显示为xx:30
+
+ -- chenhaifeng <chenhaifeng@uniontech.com>  Sat, 08 May 2021 16:30:33 +0800
+
 dde-calendar (1.0.0-1) stable; urgency=low
 
   * Autobuild Tag 1.0.0 

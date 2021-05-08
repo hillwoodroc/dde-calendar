@@ -21,6 +21,8 @@
 #include "modifyscheduleitem.h"
 #include "../globaldef.h"
 
+#include <QMouseEvent>
+
 modifyScheduleItem::modifyScheduleItem(QWidget *parent)
     : ItemWidget(parent)
 {
