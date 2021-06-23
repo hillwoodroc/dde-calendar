@@ -45,7 +45,9 @@
 #include <QDesktopWidget>
 #include <QApplication>
 #include <DFontSizeManager>
-#include <QMouseEvent> 
+#include <QMouseEvent>
+#include <DWidgetUtil>
+
 DGUI_USE_NAMESPACE
 static const int CalendarMTitleHeight = 50;
 
@@ -54,7 +56,8 @@ static const int CalendarMHeight = 634;
 
 static const int WorkViewWidth = 860;
 static const int WorkViewHeight = 584;
-Calendarmainwindow::Calendarmainwindow(QWidget *w): DMainWindow (w)
+Calendarmainwindow::Calendarmainwindow(QWidget *w)
+    : DMainWindow(w)
 {
 
     m_currentdate = QDate::currentDate();
@@ -89,10 +92,8 @@ Calendarmainwindow::Calendarmainwindow(QWidget *w): DMainWindow (w)
     if (!arrybyte.isEmpty() && isOk) {
         restoreGeometry(arrybyte);
         setWindowState(static_cast<Qt::WindowStates >(state));
-    } else {
-        QDesktopWidget *w = QApplication::desktop();
-        move(w->screenGeometry(w->primaryScreen()).center() - geometry().center());
     }
+    Dtk::Widget::moveToCenter(this);
 }
 
 /*void Calendarmainwindow::Invoke(const QString &mothodName, const QString &content)
