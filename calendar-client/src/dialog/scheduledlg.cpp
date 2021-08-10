@@ -270,12 +270,18 @@ void CScheduleDlg::slotBtClick(int buttonIndex, const QString &buttonName)
     }
     case 1: {
         //确定
-        m_setAccept = clickOkBtn();
-        //如果确定创建(修改)成功则关闭对话框
-        if (m_setAccept) {
-            close();
-        } else {
-            setFocusProxy(getButton(1));
+        //自动化测试会出现短时间内按钮click2次的情况。添加第一次触发后将保存按钮置灰的设置。
+        //若保存按钮不启用则不处理
+        if (getButton(1)->isEnabled()) {
+            m_setAccept = clickOkBtn();
+            //若新建或编辑成功则将保存按钮置灰
+            getButton(1)->setEnabled(!m_setAccept);
+            //如果确定创建(修改)成功则关闭对话框
+            if (m_setAccept) {
+                close();
+            } else {
+                setFocusProxy(getButton(1));
+            }
         }
         break;
     }
